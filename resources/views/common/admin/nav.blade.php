@@ -2,7 +2,7 @@
         <div class="sidebar--profile"> 
           <div class="profile--img"> 
             <a href="#"> 
-              <img style="background: #ffffff;" src="{{ auth()->user()->profile_image }}" alt="" class="rounded-circle"> 
+              <img style="background: #ffffff; width: 80px !important; height: 80px !mportant;" src="{{ auth()->user()->profile_image }}" alt="" class="rounded-circle"> 
             </a> 
           </div>
           <div class="profile--name"> 
@@ -180,4 +180,4 @@
   </aside> 
 
   <main class="main--container" style="position: relative;">
-      <div id="errorMsg" style="position: fixed; top: 140px;right: 7%; width: 71%; text-align: center; font-size: 22px;"></div>
+      {{-- <div id="errorMsg" style="position: fixed; top: 140px;right: 7%; width: 71%; text-align: center; font-size: 22px;"></div> --}}

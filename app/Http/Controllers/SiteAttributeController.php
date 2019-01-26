@@ -7,6 +7,9 @@ use App\SiteAttribute;
 use App\AttributeCategory;
 use App\AttributeCollection;
 use App\AttributeImages;
+use App\Contact;
+use App\UserSocialMediaAccount;
+use App\ConfigureEmail;
 
 class SiteAttributeController extends Controller
 {
@@ -27,6 +30,10 @@ class SiteAttributeController extends Controller
     }
 
     public static function getAllSiteAttributeParameter() {
+        $user_social = collect(new UserSocialMediaAccount);
+        if (auth()->user()) {
+            $user_social = UserSocialMediaAccount::getUserSocialMediaAccount(auth()->user()->id);
+        }
         $siteAttributes = SiteAttribute::getAllSiteAttribute();
         $attributeCountArray = static::getAttributeCountArray($siteAttributes);
         $data = [
@@ -41,7 +48,10 @@ class SiteAttributeController extends Controller
             'logo' => SiteAttribute::getClientLogo(),
             'loginImage' => SiteAttribute::getClientLoginImage(),
             'copyRight' => SiteAttribute::getClientCopyRight(),
-            'attributeImages' => AttributeImages::getAllImages()
+            'attributeImages' => AttributeImages::getAllImages(),
+            'contacts' => Contact::all(),
+            'social_media_accounts' => $user_social,
+            'emailTemplate' => ConfigureEmail::all()
         ];
 
         return $data;

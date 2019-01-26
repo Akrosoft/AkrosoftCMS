@@ -69,7 +69,7 @@
                 @if($attributeCategory->id == $siteAttribute->attributeCollection->category_id)
                   <div class="col-md-4"> 
                     <div class="site-attribute" style="position: relative; width:95%; margin: 10px auto; padding: 10px; border: 1px solid #ffffff;">
-                      <a id="{{ $siteAttribute->id }}" class="delete-site-attribute" href="#" style="position: absolute; top: 10px; right: 10px; display: none;" data-delete_factor="site-attribute"><i class="fa fa-times-circle"></i></a>
+                      <a id="{{ $siteAttribute->id }}" class="delete-site-attribute" href="#" style="position: absolute; top: 10px; right: 10px; display: none;" data-delete_factor="site-attribute" data-label="{{ $siteAttribute->attributeCollection->category_id == 3 ? $siteAttribute->otherLabel->label : $siteAttribute->attributeCollection->label }}"><i class="fa fa-times-circle"></i></a>
                       <div class="form-group"> 
                         <label> 
                             <span style="color: {{ $siteAttribute->attributeCollection->color }}">{!! $siteAttribute->attributeCollection->icon !!}</span>
@@ -104,7 +104,7 @@
               @foreach($attributeImages as $image)
               <div class="col-md-3" title="{{ $image->label. ": " . $image->image_ref }}"> 
                 <div class="site-attribute" style="position: relative; width:95%; margin: 10px auto; padding: 10px; border: 1px solid #ffffff;">
-                  <a id="{{$image->id}}" class="delete-site-attribute" href="#" style="position: absolute; top: 10px; right: 10px; display: none;" data-delete_factor="image-attribute"><i class="fa fa-times-circle"></i></a>
+                <a id="{{$image->id}}" class="delete-site-attribute" href="#" style="position: absolute; top: 10px; right: 10px; display: none;" data-delete_factor="image-attribute" data-label="{{ $image->label }}"><i class="fa fa-times-circle"></i></a>
                   <div class="form-group" style="text-align: center;"> 
                     <label> 
                         <div style="text-align: left;">

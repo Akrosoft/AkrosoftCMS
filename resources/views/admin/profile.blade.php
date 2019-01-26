@@ -35,7 +35,7 @@
                         <img style="background: #ffffff;" src="{{ auth()->user()->profile_image }}" alt=""> 
                         <h3 class="h3">{{ strtoupper(auth()->user()->name) }}</h3> 
                     </div>
-                    <div class="profile-cover__action bg--img" data-overlay="0.3" style="background-image: url(&quot;assets/img/covers/01_800x150.jpg&quot;);"> 
+                    <div class="profile-cover__action bg--img" data-overlay="0.3" style="background-image: url();"> 
                         <button class="btn btn-link"> 
                             .
                         </button> 
@@ -46,36 +46,21 @@
                     <div class="profile-cover__info"> 
                         <button class="btn btn-link">.</button> 
                         <ul class="nav"> 
-                            <li>
-                                <a href="#">
-                                    <i class="fab fa-facebook-f"></i>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <i class="fab fa-twitter"></i>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <i class="fab fa-google-plus-g"></i>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <i class="fab fa-instagram"></i>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <i class="fab fa-behance"></i>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <i class="fab fa-dribbble"></i>
-                                </a>
-                            </li>
+                                @if($social_media_accounts->isNotEmpty())
+                                @foreach($social_media_accounts as $account)
+                                    <li>
+                                        <a href="{{ $account->value }}">
+                                            {!! $account->attributeCollection->icon !!}
+                                        </a>
+                                    </li>
+                                @endforeach
+                            @else
+                                <li>
+                                    <a href="#">
+                                        .
+                                    </a>
+                                </li>
+                            @endif
                         </ul> 
                         <button class="btn btn-link">.</button> 
                     </div>
@@ -94,29 +79,63 @@
                     </div>
                     <div class="panel-content panel-about"> 
                         <p>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem odit esse quae, et praesentium eligendi, corporis minima repudiandae similique voluptatum dolorem temporibus doloremque.
+                            {!! 
+                                auth()->user()->bio == null ? 
+                                '<a href="#" style="width: 100%; padding: 0 0 50px;">Say something about yourself ...<a>' :
+                                auth()->user()->bio
+                            !!}
                         </p>
                         <table> 
                             <tbody>
                                 <tr> 
-                                    <th><i class="fas fa-briefcase"></i>Occupation</th> 
-                                    <td>UI/UX Designer</td>
+                                    <th><i class="fas fa-briefcase"></i>&nbsp;Occupation</th> 
+                                    <td>
+                                        {!! 
+                                            auth()->user()->occupation == null ? 
+                                            '<a href="#" style="width: 100%; padding: 0 0 50px;">Not Set<a>' :
+                                            auth()->user()->occupation
+                                        !!}
+                                    </td>
                                 </tr>
                                 <tr> 
-                                    <th><i class="fas fa-birthday-cake"></i>Date of Birth</th> 
-                                    <td>13 June 1983</td>
+                                    <th><i class="fas fa-birthday-cake"></i>&nbsp;Date of Birth</th> 
+                                    <td>
+                                        {!! 
+                                            auth()->user()->dob == null ? 
+                                            '<a href="#" style="width: 100%; padding: 0 0 50px;">Not Set<a>' :
+                                            auth()->user()->dob
+                                        !!}
+                                    </td>
                                 </tr>
                                 <tr> 
-                                    <th><i class="fas fa-map-marker-alt"></i>Locatoin</th> 
-                                    <td>123 Lorem Steet, NY, United States.</td>
+                                    <th><i class="fas fa-map-marker-alt"></i>&nbsp;Location</th> 
+                                    <td>
+                                        {!! 
+                                            auth()->user()->address == null ? 
+                                            '<a href="#" style="width: 100%; padding: 0 0 50px;">Not Set<a>' :
+                                            auth()->user()->address
+                                        !!}
+                                    </td>
                                 </tr>
                                 <tr> 
-                                    <th><i class="fas fa-mobile-alt"></i>Mobile No.</th> 
-                                    <td><a href="tel:7328397510" class="btn-link">732-839-7510</a></td>
+                                    <th><i class="fas fa-mobile-alt"></i>&nbsp;Mobile No.</th> 
+                                    <td>
+                                        {!! 
+                                            auth()->user()->phone == null ? 
+                                            '<a href="#" style="width: 100%; padding: 0 0 50px;">Not Set<a>' :
+                                            '<a href="tel:' . auth()->user()->phone . '" class="btn-link">' . auth()->user()->phone . '</a>'
+                                        !!}
+                                    </td>
                                 </tr>
                                 <tr> 
-                                    <th><i class="fas fa-globe"></i>Website</th> 
-                                    <td><a href="mailto:example.com" class="btn-link">example.com</a></td>
+                                    <th><i class="fas fa-globe"></i>&nbsp;Website</th> 
+                                    <td>
+                                        {!! 
+                                            auth()->user()->website == null ? 
+                                            '<a href="#" style="width: 100%; padding: 0 0 50px;">Not Set<a>' :
+                                            '<a href="mailto:' . auth()->user()->website . '" class="btn-link">' . auth()->user()->website . '</a>'
+                                        !!}
+                                    </td>
                                 </tr>
                             </tbody>
                         </table> 

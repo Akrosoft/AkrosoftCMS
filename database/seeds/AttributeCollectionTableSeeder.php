@@ -62,6 +62,20 @@ class AttributeCollectionTableSeeder extends Seeder
                 'color' => '#3c5a99',
                 'description' => 'This is the default description. Please update me.'
             ],[
+                'name'  => 'email_sender',
+                'label' => 'Send Email Name',
+                'category_id'  => 1,
+                'icon' => "<i class='fas fa-envelope'></i>",
+                'color' => '#231f20',
+                'description' => 'This is the default description. Please update me.'
+            ],[
+                'name'  => 'email_domain',
+                'label' => 'Email Domain',
+                'category_id'  => 1,
+                'icon' => "<i class='fas fa-envelope'></i>",
+                'color' => '#231f20',
+                'description' => 'This is the default description. Please update me.'
+            ],[
                 'name'  => 'phone',
                 'label' => 'Client Phone',
                 'category_id'  => 1,

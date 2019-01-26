@@ -3,7 +3,7 @@
     <script src="{{ asset('admin/js/all.js') }}"></script> 
     <script src="{{ asset('configuration/js/jquery.steps.js') }}"></script> 
     <script src="{{ asset('configuration/js/main.js') }}"></script>
-
+    <script src="{{ asset('common/js/jquery-confirm.min.js') }}"></script>
     <script src="{{ asset('common/js/variables.js') }}"></script>
     <script src="{{ asset('common/js/helpers.js') }}"></script>
     <script src="{{ asset('common/js/functions.js') }}"></script>

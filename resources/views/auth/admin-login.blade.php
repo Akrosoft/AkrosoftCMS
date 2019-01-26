@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="wrapper"> 
-    <div class="m-account-w bg--img" style="background-image: url(&quot;assets/img/account/wrapper-bg.jpg&quot;);"> 
+    <div class="m-account-w bg--img" style=""> 
         <div class="m-account"> 
             <div class="row no-gutters"> 
                 <div class="col-md-6"> 

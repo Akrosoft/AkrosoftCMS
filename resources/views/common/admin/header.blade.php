@@ -36,7 +36,8 @@
         <link rel="stylesheet" href="{{ asset('admin/css/ion.rangeSlider.skinFlat.min.css') }}"> 
         <link rel="stylesheet" href="{{ asset('admin/css/datatables.min.css') }}"> 
         <link rel="stylesheet" href="{{ asset('admin/css/fullcalendar.min.css') }}"> 
-        <link rel="stylesheet" href="{{ asset('admin/css/style.css') }}"> 
+        <link rel="stylesheet" href="{{ asset('admin/css/style.css') }}">
+        <link rel="stylesheet" href="{{ asset('common/css/jquery-confirm.min.css') }}"> 
 
         <style type="text/css">
             .jqstooltip { 
@@ -137,6 +138,7 @@
         <body style="">
         <div class="wrapper">
             <header class="navbar navbar-fixed"> 
+                    <div id="errorMsg" style="position: fixed; top: 110px;right: 7%; width: 71%; text-align: center; font-size: 22px; background: inherit;"></div>
             <div class="navbar--header" style="text-align: center;"> 
                 <a href="#" class="logo"> 
                     <img id="client_logo" src="{{ isset($logo) ? $logo : "" }}" alt="Client Logo" style="width: 60px; height: 60px;"> 

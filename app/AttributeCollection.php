@@ -18,6 +18,10 @@ class AttributeCollection extends Model
         return $this->hasMany('App\SiteAttribute', 'collection_id', 'id');
     }
 
+    public function userSocialMedia() {
+        return $this->hasMany('App\UserSocialMediaAccount', 'collection_id', 'id');
+    }
+
     public function siteImage() {
         return $this->hasMany('App\AttributeImages', 'collection_id', 'id');
     }
@@ -64,6 +68,22 @@ class AttributeCollection extends Model
 
     public static function getClientCopyRightID() {
         $collecttion = static::where('name', 'footer')->get();
+        if($collecttion->isNotEmpty()) {
+            return $collecttion[0]->id;
+        }
+        return null;
+    }
+
+    public static function getClientEmailSenderName() {
+        $collecttion = static::where('name', 'email_sender')->get();
+        if($collecttion->isNotEmpty()) {
+            return $collecttion[0]->id;
+        }
+        return null;
+    }
+
+    public static function getClientEmailSenderDomain() {
+        $collecttion = static::where('name', 'email_domain')->get();
         if($collecttion->isNotEmpty()) {
             return $collecttion[0]->id;
         }

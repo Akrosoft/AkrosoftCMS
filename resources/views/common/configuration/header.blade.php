@@ -20,7 +20,9 @@
         <link rel="stylesheet" href="{{ asset('configuration/css/fontawesome-all.min.css') }}"> 
 
 		<!-- STYLE CSS -->
-		<link rel="stylesheet" href="{{ asset('configuration/css/style.css') }}">
+        <link rel="stylesheet" href="{{ asset('configuration/css/style.css') }}">
+        
+        <link rel="stylesheet" href="{{ asset('common/css/jquery-confirm.min.css') }}">
     
         <style>
             .summary--table{

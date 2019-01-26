@@ -94,4 +94,33 @@ class SiteAttribute extends Model
         }
         return $default_value;
     }
+
+    public static function getClientEmailSendDetails() {
+        $isValidEmail = false;
+        $default_value = (object)['name'=>'Akrosoft CMS', 'domain' => 'akrosoft-cms.net'];
+        $senderNameAttribute_id = AttributeCollection::getClientEmailSenderName();
+        $senderDomainAttribute_id = AttributeCollection::getClientEmailSenderDomain();
+
+        if ($senderNameAttribute_id && $senderDomainAttribute_id) {
+            $senderNameAttribute = static::where('collection_id', $senderNameAttribute_id )->get(); 
+            $senderDomainAttribute = static::where('collection_id', $senderDomainAttribute_id )->get();
+            if (
+                $senderNameAttribute->isNotEmpty() && 
+                $senderDomainAttribute->isNotEmpty()
+                ) {
+                $isValidEmail = true;
+                $senderNameAttribute = $senderNameAttribute[0];
+                $senderDomainAttribute = $senderDomainAttribute[0];
+            }
+
+        }
+
+        if($isValidEmail) {
+            return (object)[
+                'name' => $senderNameAttribute->value, 
+                'domain' => $senderDomainAttribute->value
+            ];
+        }
+        return $default_value;
+    }
 }

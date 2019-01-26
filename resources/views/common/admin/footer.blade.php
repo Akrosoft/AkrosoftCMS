@@ -136,10 +136,13 @@
                   <a href="#profile" data-toggle="tab" class="nav-link active show">Profile Image</a> 
                 </li>
                 <li class="nav-item"> 
+                  <a href="#details" data-toggle="tab" class="nav-link">Profile Details</a> 
+                </li>
+                <li class="nav-item"> 
                   <a href="#social_medial" data-toggle="tab" class="nav-link">Social Media</a> 
                 </li>
                 <li class="nav-item"> 
-                  <a href="#password" data-toggle="tab" class="nav-link">Password</a> 
+                  <a id="password_link" href="#password" data-toggle="tab" class="nav-link">Password</a> 
                 </li>
               </ul> 
               <div class="tab-content"> 
@@ -147,13 +150,94 @@
                   <div class="container-fluid">
                     <h4 class="h4" style="color: #444444; width: 100%; text-align: center; padding-bottom: 30px;"><strong>Update Profile Image</strong></h4> 
                     <div style="width: 100%; text-align: center;">
-                      <img id="img_profile" src="{{ asset('/storage/images/profile/default.png') }}" alt="" style="height: 200px; width: 200px; border: 1px solid #e0e0e0; border-radius: 10px; background: #444444;">
+                      <img id="temp_profile_image_holder" src="{{ auth()->user()->profile_image }}" alt="" style="height: 200px; width: 200px; border: 1px solid #e0e0e0; border-radius: 10px; background: #444444;">
                     </div>
                     <div style="width: 100%; text-align: center;">
-                      <form id="upload_profile_image" action="" method="POST" enctype="multipart/form-data">
-                        <input id="profile_file_upload" name="logo_upload" type="file" style="visibility: hidden;"> <br />
-                        <button type="button" id="choose_profile" name="choose_logo" class="btn btn-rounded btn-outline-success">Choose Profile Image</button>
-                        <button type="button" id="upload_profile" name="upload_logo" class="btn btn-rounded btn-outline-success" style="display: none;"><i class="fas fa-upload text-warning"></i>&nbsp;&nbsp;Upload Image</button>
+                      <form id="upload_admin_profile_image" action="" method="POST" enctype="multipart/form-data">
+                        <input type="hidden" id="user_id" name="user_id" value="{{ auth()->user()->id }}">
+                        <input type="hidden" id="upload_factor" name="upload_factor" value="Admin Profile">
+                        <input id="profile_file_upload" name="profile_file_upload" type="file" style="visibility: hidden;"> <br />
+                        <button type="button" id="choose_profile" name="choose_profile" class="btn btn-rounded btn-outline-success">Choose Profile Image</button>
+                        <button type="button" id="upload_profile" name="upload_profile" class="btn btn-rounded btn-outline-success" style="display: none;"><i class="fas fa-upload text-warning"></i>&nbsp;&nbsp;Upload Image</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+                <div class="tab-pane fade" id="details"> 
+                  <div class="container-fluid">
+                    <h4 class="h4" style="color: #444444; width: 100%; text-align: center; padding-bottom: 30px;"><strong>Edit Profile Details</strong></h4> 
+                    <div style="width: 100%; text-align: center;">
+                      <form id="edit_logged_user_details" action="" method="POST">
+                          <div class="row">
+                            <div class="col-md-12"> 
+                              <div class="form-group" style="text-align: left;"> 
+                                <label> 
+                                  <span class="label-text">Fullname</span> 
+                                  <input type="hidden" id="edit_email" name="edit_email" value="{{ auth()->user()->email }}">
+                                  <input type="text" placeholder="Enter Fullname e.g. Ramsy Noah Jr." value="{{ auth()->user()->name ? auth()->user()->name : ''}}" class="form-control" required id="edit_fullname" name="edit_fullname">
+                                </label> 
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-6"> 
+                              <div class="form-group" style="text-align: left;"> 
+                                <label> 
+                                  <span class="label-text">Date of Birth</span> 
+                                  <input type="date" placeholder="Enter Date of Birth" value="{{ auth()->user()->dob ? auth()->user()->dob : ''}}" class="form-control" required id="edit_dob" name="edit_dob">
+                                </label> 
+                              </div>
+                            </div>
+                            <div class="col-md-6"> 
+                              <div class="form-group" style="text-align: left;"> 
+                                <label> 
+                                  <span class="label-text">Mobile No.</span> 
+                                  <input type="text" placeholder="Enter mobile number e.g. 07052858059" value="{{ auth()->user()->phone ? auth()->user()->phone : ''}}" class="form-control" required id="edit_phone" name="edit_phone">
+                                </label> 
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-6"> 
+                              <div class="form-group" style="text-align: left;"> 
+                                <label> 
+                                  <span class="label-text">Occupation</span> 
+                                  <input type="text" placeholder="Enter job description" value="{{ auth()->user()->occupation ? auth()->user()->occupation : ''}}" class="form-control" required id="edit_occupation" name="edit_occupation">
+                                </label> 
+                              </div>
+                            </div>
+                            <div class="col-md-6"> 
+                              <div class="form-group" style="text-align: left;"> 
+                                <label> 
+                                  <span class="label-text">Website</span> 
+                                  <input type="text" placeholder="Enter web address if any" value="{{ auth()->user()->website ? auth()->user()->website : ''}}" class="form-control" required id="edit_website" name="edit_website">
+                                </label> 
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-12"> 
+                              <div class="form-group" style="text-align: left;"> 
+                                <label> 
+                                  <span class="label-text">Address</span> 
+                                  <textarea placeholder="Enter contact address." class="form-control" required id="edit_address" name="edit_address">{{ auth()->user()->address ? auth()->user()->address : ''}}</textarea>
+                                </label> 
+                              </div>
+                            </div>
+                            <div class="col-md-12"> 
+                              <div class="form-group" style="text-align: left;"> 
+                                <label> 
+                                  <span class="label-text">Say something about yourself</span> 
+                                  <textarea placeholder="Say something wicked about yourself ...." class="form-control" required id="edit_bio" name="edit_bio">{{ auth()->user()->bio ? auth()->user()->bio : ''}}</textarea>
+                                </label>
+                              </div>
+                            </div>
+                            <div id="update_profile_detail_parent" class="col-md-12" style="display: none;"> 
+                              <div class="form-group" style="text-align: center;"> 
+                                <button id="update_profile_detail" type="submit" class="btn btn-rounded btn-outline-success">Update Profile Details</button>
+                              </div>
+                            </div>
+                          </div>
                       </form>
                     </div>
                   </div>
@@ -161,12 +245,12 @@
                 <div class="tab-pane fade" id="social_medial"> 
                   <h4 class="h4" style="color: #444444; width: 100%; text-align: center; padding-bottom: 30px;"><strong>Add Social Media Account</strong></h4>
                   <div style="width: 100%; text-align: center;"> 
-                    <form  action="#" method="POST" style="width: 90%; margin: 0 auto;">
+                    <form id="add_user_social_media_account"  action="#" method="POST" style="width: 90%; margin: 0 auto;">
                         <div class="col-md-12"> 
                           <div class="form-group" style="text-align: left;"> 
                             <label> 
                               <span class="label-text">Social Media</span> 
-                              <select  class="form-control" required>
+                              <select  class="form-control" required id="user_social_media_type" name="user_social_media_type">
                               </select>
                             </label> 
                           </div>
@@ -175,7 +259,7 @@
                           <div class="form-group" style="text-align: left;"> 
                             <label> 
                               <span class="label-text">Label</span> 
-                              <input type="text"  placeholder="Website Name" class="form-control" required> 
+                              <input type="text"  placeholder="Social Media account" id="user_social_label" name="user_social_label" class="form-control" readonly required> 
                             </label> 
                           </div>
                         </div>
@@ -183,12 +267,13 @@
                           <div class="form-group" style="text-align: left;"> 
                             <label> 
                               <span class="label-text">Value</span> 
-                              <input type="text"  placeholder="Akrosoft Inc." class="form-control" required> 
+                              <input type="text"  placeholder="www/facebook.com/akrosoft-CMS" class="form-control" id="user_SM_url"   name="user_SM_url" required> 
                             </label> 
                           </div>
                         </div>
                         <div class="col-md-12">
-                          <button type="submit"  class="btn btn-rounded btn-outline-success">Add Account</button>
+                          <input type="hidden" id="sm_user_id" name="sm_user_id" value="{{ auth()->user()->id }}">
+                          <button type="submit" id="add_user_SM_account" class="btn btn-rounded btn-outline-success">Add Account</button>
                         </div>
                       </form>
                     </div>
@@ -197,33 +282,35 @@
                   <div class="container-fluid">
                     <h4 class="h4" style="color: #444444; width: 100%; text-align: center; padding-bottom: 30px;"><strong>Change Password</strong></h4> 
                     <div style="width: 100%; text-align: center;">
-                      <form  action="" method="POST">
-                        <div class="col-md-12">
+                      <form  id="logged_user_password_update" action="" method="POST">
+                          <div id="password-errorMsg" style="width: 100%; text-align: center; font-size: 22px;"></div> 
+                        <div class="col-md-12 current-password">
                           <div class="form-group" style="text-align: left;"> 
                             <label> 
                               <span class="label-text">Current Password</span> 
-                              <input type="password"  placeholder="Enter current password" class="form-control" required> 
+                              <input type="hidden" id="logged_user_email" name="logged_user_email" value="{{ auth()->user()->email }}">
+                              <input type="password"  placeholder="Enter current password" class="form-control" id="current_password" name="current_password" required> 
                             </label> 
                           </div>
                         </div>
-                        <div class="col-md-12">
+                        <div class="col-md-12 new-password" style="display: none;">
                           <div class="form-group" style="text-align: left;"> 
                             <label> 
                               <span class="label-text">New Password</span> 
-                              <input type="password"  placeholder="Enter new password" class="form-control" required> 
+                              <input type="password"  placeholder="Enter new password" class="form-control"  id="new_password" name="new_password"  required> 
                             </label> 
                           </div>
                         </div>
-                        <div class="col-md-12">
+                        <div class="col-md-12 new-password" style="display: none;">
                           <div class="form-group" style="text-align: left;"> 
                             <label> 
                               <span class="label-text">Confirm Password</span> 
-                              <input type="password" placeholder="Enter confirm password" class="form-control" required> 
+                              <input type="password" placeholder="Enter confirm password" class="form-control"  id="confirm_password" name="confirm_password"  required> 
                             </label> 
                           </div>
                         </div>
                         <div class="col-md-12">
-                          <button type="submit" class="btn btn-rounded btn-outline-success">Update Password</button>
+                          <button id="update_password" type="submit" class="btn btn-rounded btn-outline-success">Authenticate User</button>
                         </div>
                       </form>
                     </div>
@@ -239,6 +326,96 @@
     </div>
   </div>
   {{-- End Add Account Manager Modal  --}}
+
+  {{-- Add Email Template Modals --}}
+  <div id="addEmailTemplateModal" class="modal fade" style="display: none;" aria-hidden="true"> 
+      <div class="modal-dialog modal-lg"> 
+        <div class="modal-content"> 
+          <div class="modal-header"> 
+            <h4 class="h4" style="color: #e16123;"><strong>Add Email Template</strong></h4> 
+            <button type="button" class="close" data-dismiss="modal">×</button> 
+          </div>
+          <div class="modal-body"> 
+            <form id="email_template_form" action="#" method="POST">
+                <div id="email-template-errorMsg" style="width: 100%; text-align: center; font-size: 22px;"></div> 
+              <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group" style="text-align: left;"> 
+                      <label> 
+                        <span class="label-text">Name</span> 
+                        <input type="hidden" name="template_id" id="template_id">
+                        <input type="text" placeholder="" class="form-control" required readonly id="template_name" name="template_name">
+                      </label> 
+                    </div>
+                    <div class="form-group" style="text-align: left;"> 
+                      <label> 
+                        <span class="label-text">Subject</span> 
+                        <input type="text" placeholder="" class="form-control" required id="template_subject" name="template_subject">
+                      </label> 
+                    </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group" style="text-align: left;"> 
+                    <label> 
+                      <span class="label-text">Parameters</span> 
+                      <textarea placeholder="" class="form-control" required readonly id="template_parameter" name="template_parameter"></textarea>
+                    </label> 
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                  <label> 
+                    <span class="label-text">Message</span> 
+                    <textarea name="email_template_body" id="email_template_body"></textarea>
+                  </label> 
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer"> 
+            <button type="button" class="btn btn-rounded btn-default btn-close" data-dismiss="modal"><i class="fas fa-times"></i>&nbsp;Close</button> 
+            <button id="process_create_email_template" type="button" class="btn btn-rounded btn-success"><i class="far fa-save"></i>&nbsp;Save</button> 
+          </div>
+        </div>
+      </div>
+    </div>
+  {{-- End Add Email Template Modals --}}
+
+  {{-- View Contact Message Modals --}}
+  <div id="viewContactMessageModal" class="modal fade" style="display: none;" aria-hidden="true"> 
+    <div class="modal-dialog modal-lg"> 
+      <div class="modal-content"> 
+        <div class="modal-header"> 
+          <h4 class="h4" id="msg_sender" style="color: #e16123;"></h4> 
+          <button type="button" class="close" data-dismiss="modal">×</button> 
+        </div>
+        <div class="modal-body"> 
+          <input type="hidden" name="contact_id" id="contact_id">
+          <div id="original_header" style="display: none; color: #e16123; font-weight: bolder;">Original Message:</div>
+          <div id="msg_body" style="width: 96%; margin: 20px auto; padding: 20px;">
+
+          </div>
+          <div id="reply_header" style="display: none; color: #e16123; font-weight: bolder;">Reply:</div>
+          <div id="msg_reply_body" style="display:none;">
+            <form id="contact_reply_message" action="#" method="POST" style="margin: 20px 0;">
+                <div id="reply-email-errorMsg" style="width: 100%; text-align: center; font-size: 22px;"></div> 
+                <div class="col-md-12"> 
+                  <div class="form-group" style="text-align: left;"> 
+                    <label> 
+                       <textarea placeholder="Reply Message ..." class="form-control" required id="reply_message" name="reply_message">{{ auth()->user()->address ? auth()->user()->address : ''}}</textarea>
+                    </label> 
+                  </div>
+                </div>
+            </form>
+          </div>
+        </div>
+        <div class="modal-footer"> 
+          <button id="reply_contact_message" type="button" class="btn btn-rounded btn-success">Reply Message</button> 
+          <button type="button" class="btn btn-rounded btn-default btn-close" data-dismiss="modal"><i class="fas fa-times"></i>&nbsp;Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{{-- End View Contact Message Modals --}}
 
   <script src="{{ asset('admin/js/jquery.min.js') }}"></script> 
   <script src="{{ asset('admin/js/bootstrap.bundle.min.js') }}"></script> 
@@ -261,24 +438,42 @@
   <script src="/vendor/unisharp/laravel-ckeditor/adapters/jquery.js"></script>
   <script>
     $('textarea#email-composer-body').ckeditor();
+    $('textarea#email_template_body').ckeditor();
+    $('textarea#reply_message').ckeditor();
   </script>
   <script src="{{ asset('admin/js/main.js') }}"></script>
 
+  <script src="{{ asset('common/js/jquery-confirm.min.js') }}"></script>
   <script src="{{ asset('common/js/variables.js') }}"></script> 
   <script src="{{ asset('common/js/helpers.js') }}"></script> 
   <script src="{{ asset('common/js/functions.js') }}"></script>
   <script>
 
     // Manage Variable Element
-    var validate = `<?php if(isset($attributeCollections)) { echo $attributeCollections->toJson();} ?>`;
-    if (validate) {
+      var attributeCollections = `<?php if(isset($attributeCollections)) { echo $attributeCollections->toJson();} ?>`;
+      var attributeCategories = `<?php if(isset($attributeCategories)) { echo $attributeCategories->toJson();} ?>`;
+      var siteAttributes = `<?php if(isset($siteAttributes)) { echo $siteAttributes->toJson();} ?>`;
+      var attributeImages = `<?php if(isset($attributeImages)) { echo $attributeImages->toJson();} ?>`;
+      var contacts = `<?php if(isset($contacts)) { echo $contacts->toJson();} ?>`;
+      var emailTemplate = `<?php if(isset($emailTemplate)) { echo $emailTemplate->toJson();} ?>`;
+
       var AkrosoftCMS = getAkrosoftCMSLocalStorage();
-      AkrosoftCMS.attributeCollections = JSON.parse(`<?php if(isset($attributeCollections)) { echo $attributeCollections->toJson();} ?>`);
-      AkrosoftCMS.attributeCategories = JSON.parse(`<?php if(isset($attributeCategories)) { echo $attributeCategories->toJson();} ?>`);
-      AkrosoftCMS.siteAttributes = JSON.parse(`<?php if(isset($siteAttributes)) { echo $siteAttributes->toJson();} ?>`);
-      AkrosoftCMS.attributeImages = JSON.parse(`<?php if(isset($attributeImages)) { echo $attributeImages->toJson();} ?>`);
+      
+      if (!AkrosoftCMS) {
+        AkrosoftCMS = {};
+      }
+
+      AkrosoftCMS.attributeCollections = attributeCollections ? JSON.parse(attributeCollections) : [];
+      AkrosoftCMS.attributeCategories = attributeCategories ? JSON.parse(attributeCategories) : [];
+      AkrosoftCMS.siteAttributes = siteAttributes ? JSON.parse(siteAttributes) : [];
+      AkrosoftCMS.attributeImages = attributeImages ? JSON.parse(attributeImages) : [];
+      AkrosoftCMS.contacts = contacts ? JSON.parse(contacts) : [];
+      AkrosoftCMS.emailTemplate = emailTemplate ? JSON.parse(emailTemplate) : [];
+      
       updateAkrosoftCMSLocalStorage(AkrosoftCMS);
-    }
+    
+
+    
 
     $(".site-attribute").mouseenter(function(e) {
       if (e.target.className === "site-attribute") {
@@ -337,6 +532,12 @@
         getByID('attr_image').innerHTML = generateSelectOptions('id', 'image_ref', defaultText, attributeImages);
       }
 
+      if (getByID('user_social_media_type')) {
+        var defaultText = '<option value="" hidden selected> -- Select Social Media Type --</option>';
+        var attributeCollections = getAnItemFromAkrosoftCMSLocalStorage('attributeCollections');
+        getByID('user_social_media_type').innerHTML = generateSelectOptions('id', 'label', defaultText, attributeCollections, ['category_id', 2]);
+      }
+
       if (getByID('attr_parameter')) {
         getByID('attr_parameter').addEventListener('change', updateSiteAttributeFormData);
       }
@@ -361,6 +562,10 @@
         getByID('upload_logo').addEventListener('click', processUploadAttributeImage);
       }
 
+      if (getByID('add_user_SM_account')) {
+        getByID('add_user_SM_account').addEventListener('click', processAddUserSocialMediaAccount);
+      }
+
       $('#choose_logo').click(function(){
         $('#logo_file_upload').click();
       });
@@ -382,8 +587,12 @@
       email compose JS code
       */
 
+      // if (document.getElementById('add-contact-to-mailing-list')) {
+      //   document.getElementById('add-contact-to-mailing-list').addEventListener('click', updateMailingList);
+      // }
+
       if (document.getElementById('add-contact-to-mailing-list')) {
-        document.getElementById('add-contact-to-mailing-list').addEventListener('click', updateMailingList);
+        document.getElementById('add-contact-to-mailing-list').addEventListener('click', showContactListDialogBox);
       }
 
       if (document.getElementById('display-add-contact')) {
@@ -393,6 +602,108 @@
       if (document.getElementById('display-add-contact')) {
         document.getElementById('display-add-contact').addEventListener('mouseleave', removeAddContactButton);
       }
+
+      /* 
+      ends email compose JS code
+
+      0000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000
+      */
+
+
+      /* 
+      0000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000
+
+      admin user Profile JS code
+      */
+
+      if (getByID('profile_file_upload')) {
+        getByID('profile_file_upload').addEventListener('change', selectProfileImageToUpload);
+      }
+
+      if (getByID('user_social_media_type')) {
+        getByID('user_social_media_type').addEventListener('change', updateSelectedSocialMediaLabel);
+      }
+
+      if (getByID('upload_profile')) {
+        getByID('upload_profile').addEventListener('click', processUploadAdminProfileImage);
+      }
+
+      if (getByID('update_password')) {
+        getByID('update_password').addEventListener('click', processLoggedUserPasswordUpdate);
+      }
+
+      if (getByID('update_profile_detail')) {
+        getByID('update_profile_detail').addEventListener('click', processUpdateEditedUserProfileDetails);
+      }
+
+      $('#choose_profile').click(function(){
+        $('#profile_file_upload').click();
+      });
+
+      $('#password_link').click(function(){
+          $('.new-password').css('display', 'none');
+      })
+
+      $(".topbar").css('visibility', 'hidden');
+
+      $('.view-contact-btn').click(function() {
+        if (getByID('reply_contact_message')) {
+          getByID('reply_contact_message').removeAttribute('disabled');
+        }
+      });
+
+      if (getByID('reply_contact_message')) {
+        getByID('reply_contact_message').addEventListener('click', processContactReplyRequest);
+      }
+
+      if(getByID('template_subject')) {
+        getByID('template_subject').addEventListener('input', getTemplateName);
+      }
+
+      if(getByID('process_create_email_template')) {
+        getByID('process_create_email_template').addEventListener('click', processTemplateEmailSaveAction);
+      }
+
+      if(getByID('send_test_email')) {
+        getByID('send_test_email').addEventListener('click', sendTestEmail);
+      }
+
+      if (getByID('email_template_body')) {
+        CKEDITOR.instances['email_template_body'].on('change', function() {
+          var value = stripHtml(CKEDITOR.instances['email_template_body'].getData()).replace(/[\n\r]+/g, ' ');
+          getByID('template_parameter').innerHTML = getTemplateParameterFromString(value);
+        });
+      }
+
+      if (getByID('send_bulk_email')) {
+          getByID('send_bulk_email').addEventListener('click', handleBulkEmailSendRequest);
+      }
+
+      if (getByID('contact_list_select')) {
+        getByID('contact_list_select').addEventListener('click', handleAddContactToEmail);
+      }
+
+      if (getByID('type_email')) {
+        if(getByID('type_email').checked){
+          getByID('display-add-contact').style.display = 'none';
+          getByID('type_email_address').style.display = 'block';
+        }
+      }
+
+      if (getByID('pick_email')) {
+        if(getByID('pick_email').checked){
+          getByID('display-add-contact').style.display = 'block';
+          getByID('type_email_address').style.display = 'none';
+        }
+      }
+    }
+
+    if (getByID('send_email_message')) {
+      getByID('send_email_message').addEventListener('click', handleSendComposedEmail);
     }
 
     document.addEventListener('keyup', handleDocumentKeyUpEvents);

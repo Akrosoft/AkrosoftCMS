@@ -14,5 +14,7 @@ class DatabaseSeeder extends Seeder
         $this->call(AdminUsersTableSeeder::class);
         $this->call(AttributeCategoryTableSeeder::class);
         $this->call(AttributeCollectionTableSeeder::class);
+        $this->call(ResponseCodeTableSeeder::class);
+        $this->call(EmailStatusCodeTableSeeder::class);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Contact;
 
 class PagesController extends Controller
 {
@@ -37,6 +38,42 @@ class PagesController extends Controller
         MySQL Server or PostgreSQL
         */
             dd("You DO NOT have a DATABASE SERVER install on this machine, Please Install MySQL Database Server or PostgreSQL Database Server to use Akrosoft CMS.");
+        }
+    }
+
+    public function contactGetRequest(Request $request) {
+        return view('site.contact');
+    }
+
+    public function contactPostRequest(Request $request) {
+        if ($request->ajax()) {
+            
+            $this->validate($request, [
+                'formData' => 'required'
+            ]);
+
+            $contact = new Contact;
+            $contact->fullname = $request->formData['fullname'];
+            $contact->email = $request->formData['email'];
+            $contact->phone = $request->formData['phone'];
+            $contact->message = $request->formData['message'];
+            if (isset($request->formData['subject'])) {
+                $contact->subject = $request->formData['subject'];
+            }
+            $contact->response_id = 1;
+
+            if ($contact->save()) {
+                return response()->json([
+                    'status' => true,
+                    'message' => "Message sent, you'll be contacted by one of our representative shortly.",
+                    'url' => ''
+                ]);
+            }
+            return response()->json([
+                'status' => false,
+                'message' => 'Message was not sent, please try again later.',
+                'url' => ''
+            ]);
         }
     }
 

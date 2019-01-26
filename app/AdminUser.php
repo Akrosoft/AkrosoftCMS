@@ -6,6 +6,8 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
+use App\UserSocialMediaAccount;
+
 class AdminUser extends Authenticatable
 {
     use Notifiable;
@@ -29,4 +31,12 @@ class AdminUser extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function socialMediaAccounts() {
+        return $this->hasMany('App\UserSocialMediaAccount', 'user_id', 'id');
+    }
+
+    public function getNameAttribute($name) {
+        return ucwords($name);
+    }
 }
