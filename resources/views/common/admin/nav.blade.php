@@ -26,19 +26,25 @@
             </li>
             <li class="is-dropdown"> 
               <a href="#">
-                Content Manager
+                Site Page Manager
               </a> 
               <ul> 
                 <li class=""> 
-                  <a href="{{ route('manager.content-categories')}}"> 
+                  <a href="{{ route('manager.site-pages')}}"> 
                     <i class="fas fa-layer-group"></i>
-                    <span>Content Categories</span> 
+                    <span>Site Pages</span> 
                   </a>  
                 </li>
                 <li class=""> 
-                  <a href="{{ route('manager.contents') }}"> 
+                  <a href="{{ route('manager.page-sections') }}"> 
                     <i class="fas fa-toolbox"></i>
-                    <span>Contents</span> 
+                    <span>Page Sections</span> 
+                  </a>  
+                </li>
+                <li class=""> 
+                  <a href="{{ route('manager.page-contents') }}"> 
+                    <i class="fas fa-toolbox"></i>
+                    <span> Section Contents</span> 
                   </a>  
                 </li>
                 <li class=""> 

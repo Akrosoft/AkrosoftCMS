@@ -57,8 +57,11 @@ Route::prefix('manager')->group(function() {
     Route::put('/site-attributes', 'AdminsController@handleSiteAttributeUpdateRequest');
     Route::post('/site-attributes', 'AdminsController@addAttributes')->name('manager.attributes.submit');
     Route::get('/site-attributes', 'AdminsController@attributes')->name('manager.attributes');
-    Route::get('/content-categories', 'AdminsController@contentCategories')->name('manager.content-categories');
-    Route::get('/contents', 'AdminsController@contents')->name('manager.contents');
+    Route::get('/site-pages/{page_slug}/preview', 'AdminsController@sitePagePreview');
+    Route::get('/site-pages/{page_slug}/settings', 'AdminsController@sitePageSetting')->name('manager.page-settings');
+    Route::get('/site-pages', 'AdminsController@sitePages')->name('manager.site-pages');
+    Route::get('/page-sections', 'AdminsController@pageSections')->name('manager.page-sections');
+    Route::get('/page-section-contents', 'AdminsController@pageContents')->name('manager.page-contents');
     Route::get('/login', 'Auth\AdminLoginController@showLoginForm')->name('admin.login');
     Route::post('/login', 'Auth\AdminLoginController@login')->name('admin.login.submit');
     Route::get('/', 'AdminsController@index')->name('admin.dashboard');

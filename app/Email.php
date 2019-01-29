@@ -147,11 +147,12 @@ class Email extends Model
         ]);
 
         $params = $d->params;
+        $temp_message = $message->body;
         $contacts = Contact::all();
         foreach ($contacts as $contact) {
             $params['name'] = $contact->fullname;
             $params['email'] = $contact->email;
-            $message->body = $this->parseComposedMail($message->body, $params);
+            $message->body = $this->parseComposedMail($temp_message, $params);
             $sent = $this->sendEmail($contact->email, $message, []);
         } 
         
@@ -166,6 +167,7 @@ class Email extends Model
         ]);
 
         $contact_id = $d->contactList;
+        $params = $d->params;
         $temp_message = $message->body;
 
         for($i=0; $i < count($contact_id); $i++) {
@@ -186,8 +188,13 @@ class Email extends Model
             "callToAction" => $d->callToAction, 
             "sendEmailRequestInfo" => $d
         ]);
-        
-    
+        $temp_message = $message->body;
+        $email = $d->email;
+        $params = $d->params;
+        $params['email'] = $email;
+        $message->body = $this->parseComposedMail($temp_message, $params);
+        $sent = $this->sendEmail($email, $message, []);
+
         return true;
     }
 

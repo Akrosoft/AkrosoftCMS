@@ -903,12 +903,12 @@ function handleSendComposedEmail(e) {
                     }
                 } else if (getByID('type_email').checked) {
                     formData.type = 'single email';
-                    emailParamsObject = null;
                     if (getByID('mail_to').value == "") {
                         var message = 'Recipient email is EMPTY, please add recipient email address.';
                         flashMessagesWithoutReload(message, 'errorMsg', "", type="#ff0000");
                     } else {
                         setTimeout(function(){
+                            emailParamsObject = null;
                             buildEmailParameter();
                             var getEPInterval = setInterval(function(){
                                 if (emailParamsObject) {

@@ -16,6 +16,7 @@ use App\UserSocialMediaAccount;
 use App\Contact;
 use App\ConfigureEmail;
 use App\Email;
+use App\SitePage;
 use Auth;
 
 class AdminsController extends Controller
@@ -39,14 +40,36 @@ class AdminsController extends Controller
         return view('admin.index')->with($data);
     }
 
-    public function contentCategories() {
+    public function sitePages() {
         $data = SiteAttributeController::getAllSiteAttributeParameter();
-        return view('admin.content-categories')->with($data);
+        $data['pages'] = SitePagesController::getSitePages();
+        // dd($data);
+        return view('admin.site-pages')->with($data);
     }
 
-    public function contents() {
+    public function sitePagePreview($page_slug) {
+        $page = SitePage::getSitePageBySlug($page_slug);
+        $data = [
+            'page' => $page[0]
+        ];
+
+        return view('admin.preview')->with($data);
+    }
+
+    public function sitePageSetting($page_slug) {
         $data = SiteAttributeController::getAllSiteAttributeParameter();
-        return view('admin.contents')->with($data);
+        return view('admin.page-settings')->with($data);
+    }
+
+
+    public function pageSections() {
+        $data = SiteAttributeController::getAllSiteAttributeParameter();
+        return view('admin.page-sections')->with($data);
+    }
+
+    public function pageContents() {
+        $data = SiteAttributeController::getAllSiteAttributeParameter();
+        return view('admin.page-contents')->with($data);
     }
 
     public function attributes() {

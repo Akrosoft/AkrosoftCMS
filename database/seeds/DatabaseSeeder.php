@@ -16,5 +16,6 @@ class DatabaseSeeder extends Seeder
         $this->call(AttributeCollectionTableSeeder::class);
         $this->call(ResponseCodeTableSeeder::class);
         $this->call(EmailStatusCodeTableSeeder::class);
+        $this->call(SitePageTableSeeder::class);
     }
 }

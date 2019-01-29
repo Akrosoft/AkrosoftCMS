@@ -7,37 +7,58 @@ use App\Contact;
 
 class PagesController extends Controller
 {
-    public function index() {
-        // get OS Type
-        $OS = getOSType();
+    public function index(Request $request) {
         
-        //  Check if database server is installed!!!
-        $hasDBServerInstalled = getDBServerInstallationStatus($OS);
+        if (false) {
+            $page_request = $request->all();
+            
+            $page = isset($page_request['page']) ? $page_request['page'] : null;
 
-        if ($hasDBServerInstalled['DBServerIsInstalled']) { 
-        /*
-        if Db Server is installed proceed to get environment variable
-        */
-
-        // Display DB Server info
-        // dd($hasDBServerInstalled['DBServerInfo']);
-
-        // Check if .env file exist
-            $dotENV = app()->environmentFilePath();
-
-            if (file_exists($dotENV)) {
-                if (static::isENVConfigured()) {
-                    return static::yesENVIsConfigured();
-                } else {
-                    return static::noENVIsNotConfigured();
+            if($page) {
+                $page = SitePagesController::getPageBySlug();
+                if ($page == "error") {
+                    dd($page);
                 }
+                // $data = SitePagesController::getSitePageContents($page);
+                dd($page);
+
+            } else {
+                $page = SitePagesController::getHomePage();
+                // $data = SitePagesController::getSitePageContents($page);
+                dd($page);
             }
         } else {
-        /*
-        if Db Server is NOT installed, ask user to install a database server
-        MySQL Server or PostgreSQL
-        */
-            dd("You DO NOT have a DATABASE SERVER install on this machine, Please Install MySQL Database Server or PostgreSQL Database Server to use Akrosoft CMS.");
+            // get OS Type
+            $OS = getOSType();
+            
+            //  Check if database server is installed!!!
+            $hasDBServerInstalled = getDBServerInstallationStatus($OS);
+
+            if ($hasDBServerInstalled['DBServerIsInstalled']) { 
+            /*
+            if Db Server is installed proceed to get environment variable
+            */
+
+            // Display DB Server info
+            // dd($hasDBServerInstalled['DBServerInfo']);
+
+            // Check if .env file exist
+                $dotENV = app()->environmentFilePath();
+
+                if (file_exists($dotENV)) {
+                    if (static::isENVConfigured()) {
+                        return static::yesENVIsConfigured();
+                    } else {
+                        return static::noENVIsNotConfigured();
+                    }
+                }
+            } else {
+            /*
+            if Db Server is NOT installed, ask user to install a database server
+            MySQL Server or PostgreSQL
+            */
+                dd("You DO NOT have a DATABASE SERVER install on this machine, Please Install MySQL Database Server or PostgreSQL Database Server to use Akrosoft CMS.");
+            }
         }
     }
 
