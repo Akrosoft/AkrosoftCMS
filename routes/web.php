@@ -11,6 +11,67 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+// Route::get('send_test_email', function(){
+//     try {
+//         $result = Mail::raw('Sending emails with Mailgun and Laravel is easy!', function($message) {
+//             $message->subject('Akrosoft CMS email test');
+//             $message->from('no-reply@akrosoft.site', 'Akrosoft CMS');
+//             $message->to('akugbeode@gmail.com');
+//         });
+        
+        
+//         dd($result);
+        
+//     } catch (\Exception $e) {
+//         dd($e);
+//     }
+	
+// });
+
+Auth::routes();
+
+// Configuration Setting Route
+Route::get('/akrosoft-cms', 'ConfigurationController@index');
+
+// Site Routes
+Route::get('/', 'PagesController@index');
+Route::get('/contact-us', 'PagesController@contactGetRequest');
+Route::post('/contact-us', 'PagesController@contactPostRequest');
+Route::post('/send-test-email', 'AdminsController@sendTestEmail');
+
+// Authenticated Admins Routes
+Route::prefix('manager')->group(function() {
+    Route::put('/contact/reply-message', 'AdminsController@handleReplyContactMessage');
+    Route::put('/update-logged-user-details', 'AdminsController@updateLoggedUserProfileDetails');
+    Route::put('/update-password', 'AdminsController@updateLoggedUserPassword');
+    Route::post('/update-password', 'AdminsController@authenticateLoggedUser');
+    Route::post('/add-user-social-media-account', 'AdminsController@addUserSocialMediaAccount');
+    Route::get('/profile', 'AdminsController@adminUserProfile')->name('manager.profile');
+    Route::get('/email-compose', 'AdminsController@composeEmail')->name('manager.email-compose');
+    Route::post('/email-compose', 'AdminsController@sendComposedEmail')->name('manager.send-composed-email');
+    Route::get('/email-templates', 'AdminsController@emailTemplates')->name('manager.email-templates');
+    Route::post('/email-templates', 'AdminsController@storeEmailTemplates')->name('manager.store-email-templates');
+    Route::get('/contact-list', 'AdminsController@contactList')->name('manager.contact-list');
+    Route::post('/upload-image', 'AdminsController@handleUploadImage');
+    Route::delete('/site-attributes', 'AdminsController@handleSiteAttributeDeleteRequest');
+    Route::put('/site-attributes', 'AdminsController@handleSiteAttributeUpdateRequest');
+    Route::post('/site-attributes', 'AdminsController@addAttributes')->name('manager.attributes.submit');
+    Route::get('/site-attributes', 'AdminsController@attributes')->name('manager.attributes');
+    Route::get('/site-pages/{page_slug}/preview', 'AdminsController@sitePagePreview');
+    Route::get('/site-pages/{page_slug}/manage', 'AdminsController@sitePageContentManager')->name('manager.manage-page-content');
+    Route::post('/site-pages-setup', 'AdminsController@handleUpdateSitePagesSetupRequest')->name('manager.update-site-pages-setup');
+    Route::get('/site-pages-setup', 'AdminsController@sitePagesSetup')->name('manager.site-pages-setup');
+    Route::post('/site-pages', 'AdminsController@handleCreateSitePageRequest')->name('manager.create-site-pages');
+    Route::get('/site-pages', 'AdminsController@sitePages')->name('manager.site-pages');
+    Route::post('/site-menu', 'AdminsController@handleUpdateSiteMenuRequest')->name('manager.update-site-menu');
+    Route::get('/site-menu', 'AdminsController@siteMenu')->name('manager.site-menu');
+    Route::get('/site-footer', 'AdminsController@siteFooter')->name('manager.site-footer');
+    Route::get('/login', 'Auth\AdminLoginController@showLoginForm')->name('admin.login');
+    Route::post('/login', 'Auth\AdminLoginController@login')->name('admin.login.submit');
+    Route::get('/', 'AdminsController@index')->name('admin.dashboard');
+});
+
+// // Authenticated Users Routes
+Route::middleware(['auth'])->group(function() {
+    Route::get('/dashboard', 'UsersController@index')->name('dashboard');
 });
