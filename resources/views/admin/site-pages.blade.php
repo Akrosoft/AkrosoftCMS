@@ -18,7 +18,7 @@
             <div class="summary--widget"> 
               <div class="summary--item"> 
                 <p class="">
-                  <a role="button" href="#" style="margin-top: 10px;" class="btn btn-rounded btn-outline-success">Create Site Page</a>
+                  <a id="create_site_page_btn" role="button" href="#createSitePageModal" style="margin-top: 10px;" class="btn btn-rounded btn-outline-success" data-toggle="modal">Create Site Page</a>
                 </p>
               </div>
             </div>
@@ -50,16 +50,16 @@
                         <th class="sorting" tabindex="0" aria-controls="recordsListView" rowspan="1" colspan="1"style="width: 2%;">
                           #
                         </th>
-                        <th class="not-sortable sorting_disabled" rowspan="1" colspan="1" aria-label="Image" style="width: 20%;">
+                        <th class="not-sortable sorting_disabled" rowspan="1" colspan="1" aria-label="Image" style="width: 15%;">
                           Page Title
                         </th>
-                        <th class="sorting" tabindex="0" aria-controls="recordsListView" rowspan="1" colspan="1" style="width: 25%;">
+                        <th class="sorting" tabindex="0" aria-controls="recordsListView" rowspan="1" colspan="1" style="width: 15%;">
                           Slug
                         </th>
-                        <th class="sorting" tabindex="0" aria-controls="recordsListView" rowspan="1" colspan="1" style="width: 18%">
-                          Description
+                        <th class="sorting" tabindex="0" aria-controls="recordsListView" rowspan="1" colspan="1" style="width: 15%">
+                          Header Title
                         </th>
-                        <th class="not-sortable sorting_disabled" rowspan="1" colspan="1" style="width: 20%; text-align: center;">
+                        <th class="not-sortable sorting_disabled" rowspan="1" colspan="1" style="width: 53%; text-align: center;">
                           Actions
                         </th>
                       </tr>
@@ -77,13 +77,13 @@
                             {{ $page->slug }}
                           </td>
                           <td>
-                            {{ $page->description }}
+                            {{ $page->header_title }}
                           </td>
                           <td> 
                             <div class="dropleft" style="text-align: right;"> 
-                                <a href="/manager/site-pages/{{$page->slug}}/preview" class="btn btn-rounded btn-outline-primary btn-sm">Preview</a> 
-                                {{-- <a href="#" class="btn btn-rounded btn-outline-success btn-sm">Edit</a>  --}}
-                                <a href="/manager/site-pages/{{$page->slug}}/settings" class="btn btn-rounded btn-outline-warning btn-sm">Settings</a> 
+                                <a href="#" class="btn btn-rounded btn-outline-primary btn-sm">Edit</a>
+                                <a href="/manager/site-pages/{{$page->slug}}/manage" class="btn btn-rounded btn-outline-warning btn-sm">Manage Content</a>
+                                <a href="/manager/site-pages/{{$page->slug}}/preview" class="btn btn-rounded btn-outline-primary btn-sm">Preview</a>  
                             </div>
                           </td>
                         </tr>

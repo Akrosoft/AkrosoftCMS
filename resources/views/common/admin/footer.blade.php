@@ -417,6 +417,152 @@
   </div>
 {{-- End View Contact Message Modals --}}
 
+{{-- Create Site Page Modals --}}
+<div id="createSitePageModal" class="modal fade" style="display: none;" aria-hidden="true"> 
+    <div class="modal-dialog modal-lg"> 
+      <div class="modal-content"> 
+        <div class="modal-header"> 
+          <h4 class="h4" id="create_site_page_header" style="color: #e16123;"></h4> 
+          <button type="button" class="close" data-dismiss="modal">×</button> 
+        </div>
+        <div class="modal-body"> 
+          <form id="create_site_page_form" action="#" method="POST" style="width: 90%; margin: 0 auto;">
+            <h6 style="width: 100%; text-align: center; font-style: italic; color: #880000;">Please, complete all fields as REQUIRED</h6>
+            <div class="col-md-12"> 
+              <div class="form-group"> 
+                <label> 
+                  <span class="label-text">Page Title</span> 
+                  <input type="text" id="create_page_title" name="create_page_title" class="form-control" value="" required>
+                </label> 
+              </div>
+            </div>
+            <div class="col-md-12"> 
+              <div class="form-group"> 
+                <label> 
+                  <span class="label-text">Page Slug</span> 
+                  <input type="text" id="create_page_slug" name="create_page_slug" class="form-control" readonly required>
+                </label> 
+              </div>
+            </div>
+            <div class="col-md-12"> 
+              <div class="form-group"> 
+                <label> 
+                  <span class="label-text">Page Header Title</span> 
+                  <input type="text" id="page_header_title" name="page_header_title" placeholder=""  class="form-control" required>
+                </label> 
+              </div>
+            </div>
+            <div class="col-md-12"> 
+              <div class="form-group"> 
+                <label> 
+                  <span class="label-text">Meta Tag</span> 
+                  <textarea id="meta_tag" name="meta_tag" class="form-control" required></textarea>
+                </label> 
+              </div>
+            </div>
+            <div class="col-md-12"> 
+              <div class="form-group"> 
+                <label> 
+                  <span class="label-text">Meta Description</span> 
+                  <textarea id="meta_desc" name="meta_desc" class="form-control" required></textarea>
+                </label> 
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer"> 
+          <button id="create_site_page" type="button" class="btn btn-rounded btn-success">Create Site Page</button> 
+          <button type="button" class="btn btn-rounded btn-default btn-close" data-dismiss="modal"><i class="fas fa-times"></i>&nbsp;Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{{-- End Create Site Page Modals --}}
+
+{{-- Add Site Menu Modals --}}
+<div id="addSiteMenuModal" class="modal fade" style="display: none;" aria-hidden="true"> 
+    <div class="modal-dialog modal-lg"> 
+      <div class="modal-content"> 
+        <div class="modal-header"> 
+          <h4 class="h4" id="add_site_menu" style="color: #e16123;"></h4> 
+          <button type="button" class="close" data-dismiss="modal">×</button> 
+        </div>
+        <div class="modal-body"> 
+          <form id="add_site_menu_form" action="#" method="POST" style="width: 90%; margin: 0 auto;">
+            <h6 style="width: 100%; text-align: center; font-style: italic; color: #880000;">Please, complete all fields as REQUIRED</h6>
+            <div class="col-md-12"> 
+              <div class="form-group"> 
+                <label> 
+                  <span class="label-text">Menu Page</span> 
+                  <select id="menu_page" name="menu_page" class="form-control" required>
+                  </select>
+                </label> 
+              </div>
+            </div>
+            <div class="col-md-12"> 
+              <div class="form-group"> 
+                <label> 
+                  <span class="label-text">Page Slug</span> 
+                  <input type="text" id="page_slug" name="page_slug" class="form-control" readonly required>
+                </label> 
+              </div>
+            </div>
+            <div class="col-md-12"> 
+              <div class="form-group"> 
+                <label> 
+                  <span class="label-text">Menu Label</span> 
+                  <input type="text" id="menu_label" name="menu_label" placeholder="Enter menu label e.g. Home"  class="form-control" required>
+                </label> 
+              </div>
+            </div>
+            <div class="col-md-12"> 
+              <div class="form-group"> 
+                <label> 
+                  <span class="label-text">Menu Type</span> 
+                  <select id="menu_type" name="menu_type" class="form-control" required>
+                    <option hidden selected value="">--Select Menu Type--</option>
+                    <option value="1">Main menu</option>
+                    <option value="2">Sub menu</option>
+                  </select>
+                </label> 
+              </div>
+            </div>
+            <div class="col-md-12" id="display_parent_menu" style="display: none;"> 
+              <div class="form-group"> 
+                <label> 
+                  <span class="label-text">Parent Menu</span> 
+                  <select id="menu_id" name="menu_id" class="form-control" required>
+                  </select>
+                </label> 
+              </div>
+            </div>
+            <div class="col-md-12"> 
+              <div class="form-group"> 
+                <label> 
+                  <span class="label-text">Menu URL</span> 
+                  <input type="text" id="menu_url" name="menu_url" class="form-control" required>
+                </label> 
+              </div>
+            </div>
+            <div class="col-md-12"> 
+              <div class="form-group"> 
+                <label> 
+                  <span class="label-text">Menu Order</span> 
+                  <input type="number" id="menu_order" name="menu_order" placeholder="Enter menu order e.g. 1" class="form-control" required> 
+                </label> 
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer"> 
+          <button id="update_site_menu" type="button" class="btn btn-rounded btn-success">Update Site Menu</button> 
+          <button type="button" class="btn btn-rounded btn-default btn-close" data-dismiss="modal"><i class="fas fa-times"></i>&nbsp;Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{{-- End Add Site Menu Modals --}}
+
   <script src="{{ asset('admin/js/jquery.min.js') }}"></script> 
   <script src="{{ asset('admin/js/bootstrap.bundle.min.js') }}"></script> 
   <script src="{{ asset('admin/js/all.js') }}"></script> 
@@ -455,7 +601,16 @@
       var siteAttributes = `<?php if(isset($siteAttributes)) { echo $siteAttributes->toJson();} ?>`;
       var attributeImages = `<?php if(isset($attributeImages)) { echo $attributeImages->toJson();} ?>`;
       var contacts = `<?php if(isset($contacts)) { echo $contacts->toJson();} ?>`;
-      var emailTemplate = `<?php if(isset($emailTemplate)) { echo $emailTemplate->toJson();} ?>`;
+      var emailTemplates = `<?php if(isset($emailTemplate)) { echo $emailTemplate->toJson();} ?>`;
+      var pages = `<?php if(isset($pages)) { echo $pages->toJson();} ?>`;
+      var menus = `<?php if(isset($menus)) { echo $menus->toJson();} ?>`;
+      var templates = `<?php if(isset($templates)) { echo $templates->toJson();} ?>`;
+      var template_elements = `<?php if(isset($template_elements)) { echo $template_elements->toJson();} ?>`;
+      var element_attributes = `<?php if(isset($element_attributes)) { echo $element_attributes->toJson();} ?>`;
+      var element_categories = `<?php if(isset($element_categories)) { echo $element_categories->toJson();} ?>`;
+      var manual_attribute_links = `<?php if(isset($manual_attribute_links)) { echo $manual_attribute_links->toJson();} ?>`;
+      var auto_attributes = `<?php if(isset($auto_attributes)) { echo json_encode($auto_attributes, true);} ?>`
+      var menus = `<?php if(isset($menus)) { echo $menus->toJson();} ?>`;
 
       var AkrosoftCMS = getAkrosoftCMSLocalStorage();
       
@@ -468,8 +623,16 @@
       AkrosoftCMS.siteAttributes = siteAttributes ? JSON.parse(siteAttributes) : [];
       AkrosoftCMS.attributeImages = attributeImages ? JSON.parse(attributeImages) : [];
       AkrosoftCMS.contacts = contacts ? JSON.parse(contacts) : [];
-      AkrosoftCMS.emailTemplate = emailTemplate ? JSON.parse(emailTemplate) : [];
-      
+      AkrosoftCMS.emailTemplates = emailTemplates ? JSON.parse(emailTemplates) : [];
+      AkrosoftCMS.pages = pages ? JSON.parse(pages) : [];
+      AkrosoftCMS.menus = menus ? JSON.parse(menus) : [];
+      AkrosoftCMS.templates = templates ? JSON.parse(templates) : [];
+      AkrosoftCMS.template_elements = template_elements ? JSON.parse(template_elements) : [];
+      AkrosoftCMS.element_attributes = element_attributes ? JSON.parse(element_attributes) : [];
+      AkrosoftCMS.element_categories = element_categories ? JSON.parse(element_categories) : [];
+      AkrosoftCMS.manual_attribute_links = manual_attribute_links ? JSON.parse(manual_attribute_links) : [];
+      AkrosoftCMS.auto_attributes = auto_attributes ? JSON.parse(auto_attributes) : [];
+      AkrosoftCMS.menus = menus ? JSON.parse(menus) : [];
       updateAkrosoftCMSLocalStorage(AkrosoftCMS);
     
 
@@ -529,13 +692,28 @@
       if (getByID('attr_image')) {
         var defaultText = '<option value="value" hidden selected> -- Select Image Ref --</option>';
         var attributeImages = getAnItemFromAkrosoftCMSLocalStorage('attributeImages');
-        getByID('attr_image').innerHTML = generateSelectOptions('id', 'image_ref', defaultText, attributeImages);
+        // getByID('attr_image').innerHTML = generateSelectOptions('id', 'image_ref', defaultText, attributeImages);
+        getByID('attr_image').innerHTML = generateSelectOptionsWithValueLabel('id', 'image_ref', 'label', defaultText, attributeImages);
       }
 
       if (getByID('user_social_media_type')) {
         var defaultText = '<option value="" hidden selected> -- Select Social Media Type --</option>';
         var attributeCollections = getAnItemFromAkrosoftCMSLocalStorage('attributeCollections');
         getByID('user_social_media_type').innerHTML = generateSelectOptions('id', 'label', defaultText, attributeCollections, ['category_id', 2]);
+      }
+
+      if (getByID('menu_page')) {
+        var defaultText = '<option value="" hidden selected> -- Select Menu Page --</option>';
+        var pages = getAnItemFromAkrosoftCMSLocalStorage('pages');
+        getByID('menu_page').innerHTML = generateSelectOptions('id', 'title', defaultText, pages);
+      }
+      
+      if (getByID('menu_type')) {
+        getByID('menu_type').addEventListener('change', toggleSiteMenuParentMenuFormData);
+      }
+
+      if (getByID('menu_page')) {
+        getByID('menu_page').addEventListener('change', updateSiteMenuPageSlugFormData);
       }
 
       if (getByID('attr_parameter')) {
@@ -706,6 +884,42 @@
       getByID('send_email_message').addEventListener('click', handleSendComposedEmail);
     }
 
+    if (getByID('add_site_menu_btn')) {
+      getByID('add_site_menu_btn').addEventListener('click', handleAddSiteMenuButtonClick);
+    }
+
+    if (getByID('create_site_page_btn')) {
+      getByID('create_site_page_btn').addEventListener('click', handleCreateSitePageButtonClick);
+    }
+
+    if (getByID('create_page_title')) {
+      getByID('create_page_title').addEventListener('keyup', handlePageTitleTextChange);
+    }
+
+    if (getByID('create_site_page')) {
+      getByID('create_site_page').addEventListener('click', handleCreateSitePageRequest);
+    }
+
+    if (getByID('update_site_menu')) {
+      getByID('update_site_menu').addEventListener('click', handleUpdateSiteMenuRequest);
+    }
+
+    if (getByID('save_template_setting_btn')) {
+      getByID('save_template_setting_btn').addEventListener('click', handleUpdateTemplateSettingRequest);
+    }
+
+    $('#template').on('change', function(e) {
+        handleUpdateSelectedTemplateDependencies(e);
+    });
+
+    $('#menu').on('change', function(e) {
+        handleUpdateSelectedMenuDependencies(e);
+    })
+
+    $('#footer').on('change', function(e) {
+      handleUpdateSelectedFooterDependencies(e);
+    })
+  
     document.addEventListener('keyup', handleDocumentKeyUpEvents);
     document.addEventListener('click', handleDocumentClickEvents);
   </script>

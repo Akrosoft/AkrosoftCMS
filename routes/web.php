@@ -58,10 +58,14 @@ Route::prefix('manager')->group(function() {
     Route::post('/site-attributes', 'AdminsController@addAttributes')->name('manager.attributes.submit');
     Route::get('/site-attributes', 'AdminsController@attributes')->name('manager.attributes');
     Route::get('/site-pages/{page_slug}/preview', 'AdminsController@sitePagePreview');
-    Route::get('/site-pages/{page_slug}/settings', 'AdminsController@sitePageSetting')->name('manager.page-settings');
+    Route::get('/site-pages/{page_slug}/manage', 'AdminsController@sitePageContentManager')->name('manager.manage-page-content');
+    Route::post('/site-pages-setup', 'AdminsController@handleUpdateSitePagesSetupRequest')->name('manager.update-site-pages-setup');
+    Route::get('/site-pages-setup', 'AdminsController@sitePagesSetup')->name('manager.site-pages-setup');
+    Route::post('/site-pages', 'AdminsController@handleCreateSitePageRequest')->name('manager.create-site-pages');
     Route::get('/site-pages', 'AdminsController@sitePages')->name('manager.site-pages');
-    Route::get('/page-sections', 'AdminsController@pageSections')->name('manager.page-sections');
-    Route::get('/page-section-contents', 'AdminsController@pageContents')->name('manager.page-contents');
+    Route::post('/site-menu', 'AdminsController@handleUpdateSiteMenuRequest')->name('manager.update-site-menu');
+    Route::get('/site-menu', 'AdminsController@siteMenu')->name('manager.site-menu');
+    Route::get('/site-footer', 'AdminsController@siteFooter')->name('manager.site-footer');
     Route::get('/login', 'Auth\AdminLoginController@showLoginForm')->name('admin.login');
     Route::post('/login', 'Auth\AdminLoginController@login')->name('admin.login.submit');
     Route::get('/', 'AdminsController@index')->name('admin.dashboard');

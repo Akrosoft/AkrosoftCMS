@@ -15,6 +15,11 @@ class CreateSiteMenusTable extends Migration
     {
         Schema::create('site_menus', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('page_id'); 
+            $table->string('label');
+            $table->integer('parent_id')->default(0);
+            $table->string('url');
+            $table->integer('order');
             $table->timestamps();
         });
     }

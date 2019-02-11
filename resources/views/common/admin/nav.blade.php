@@ -26,9 +26,21 @@
             </li>
             <li class="is-dropdown"> 
               <a href="#">
-                Site Page Manager
+                Website Manager
               </a> 
-              <ul> 
+              <ul>
+                <li class=""> 
+                  <a href="{{ route('manager.attributes') }}"> 
+                    <i class="fas fa-project-diagram"></i>
+                    <span>Site Attributes</span> 
+                  </a>  
+                </li>
+                <li class=""> 
+                  <a href="{{ route('manager.site-pages-setup')}}"> 
+                    <i class="fas fa-layer-group"></i>
+                    <span>Site Pages Setup</span> 
+                  </a>  
+                </li>
                 <li class=""> 
                   <a href="{{ route('manager.site-pages')}}"> 
                     <i class="fas fa-layer-group"></i>
@@ -36,21 +48,15 @@
                   </a>  
                 </li>
                 <li class=""> 
-                  <a href="{{ route('manager.page-sections') }}"> 
+                  <a href="{{ route('manager.site-menu') }}"> 
                     <i class="fas fa-toolbox"></i>
-                    <span>Page Sections</span> 
+                    <span>Site Menu</span> 
                   </a>  
                 </li>
                 <li class=""> 
-                  <a href="{{ route('manager.page-contents') }}"> 
+                  <a href="{{ route('manager.site-footer') }}"> 
                     <i class="fas fa-toolbox"></i>
-                    <span> Section Contents</span> 
-                  </a>  
-                </li>
-                <li class=""> 
-                  <a href="{{ route('manager.attributes') }}"> 
-                    <i class="fas fa-project-diagram"></i>
-                    <span>Site Attributes</span> 
+                    <span>Site Footer</span> 
                   </a>  
                 </li>
               </ul> 

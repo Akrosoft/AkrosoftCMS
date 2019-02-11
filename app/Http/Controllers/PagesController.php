@@ -9,7 +9,7 @@ class PagesController extends Controller
 {
     public function index(Request $request) {
         
-        if (false) {
+        if (true) {
             $page_request = $request->all();
             
             $page = isset($page_request['page']) ? $page_request['page'] : null;
@@ -63,7 +63,7 @@ class PagesController extends Controller
     }
 
     public function contactGetRequest(Request $request) {
-        return view('site.contact');
+        return view('contact');
     }
 
     public function contactPostRequest(Request $request) {

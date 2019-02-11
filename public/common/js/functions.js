@@ -32,6 +32,11 @@ function handleDocumentClickEvents(e) {
                 getByID('contact_list_menu').style.display = 'none';
             }
         }
+
+        // Delete Site Page Attribute
+        if(getSVGClickTarget(e).parentNode.getAttribute('data-delete_factor') == 'delete-site-attribute-link') {
+            deleteSitePageAttributeLink(e);
+        }
     }  
     
     if (e.target.tagName === "A") {
@@ -102,6 +107,10 @@ function handleDocumentClickEvents(e) {
                 CKEDITOR.instances['email_template_body'].setData(selectedContact.message); 
             }
         }
+
+        if(e.target.getAttribute('data-delete_factor') == 'delete-site-attribute-link') {
+            deleteSitePageAttributeLink(e);
+        }
     }
 
     if (e.target.tagName === "INPUT") {
@@ -115,6 +124,143 @@ function handleDocumentClickEvents(e) {
             getByID('type_email_address').style.display = 'none';
         }
     }
+
+    if (e.target.tagName === "SELECT") {
+        if (!e.target.id) {
+            return;
+        }
+        if (isDynamicSelect(e.target.id)) {
+            // alert("Yes");
+        }
+    }
+
+    if (e.target.tagName === "BUTTON") {
+        e.preventDefault();
+        if (!e.target.id) {
+            return;
+        }
+        if (isDynamicButton(e.target.id)) {
+            var elementName = getCompenentName(e.target.id);
+            var targetedSelectID = elementName + "_select";
+            var targetedULID = elementName + "_links";
+            var menuLinks = null;
+
+            var isValid = validateSingleElement(targetedSelectID);
+
+            if (isValid) {
+                var formData = {
+                    action: e.target.getAttribute("data-action"),
+                    attribute_id: e.target.getAttribute("data-attribute_id"),
+                    menu_id: $('#' + targetedSelectID).val(),
+                    target_name: elementName
+                };
+
+                data = makeSyncAJAXRequest('/manager/site-pages-setup', formData);
+
+                if (data.status) {
+                    menuLinks = data.links;
+                    var menus = getAnItemFromAkrosoftCMSLocalStorage('menus');
+                    var element_attributes = getAnItemFromAkrosoftCMSLocalStorage('element_attributes');
+                    var linkLI = "";
+
+                    for (i=0; i < menuLinks.length; i++) {
+                        menu = selectAnItemFromACollectionByID(parseInt(menuLinks[i].target_id, 10), menus);
+                        attribute = selectAnItemFromACollectionByID(parseInt(menuLinks[i].attribute_id, 10), element_attributes)
+                        if (menu) {
+                            linkLI +=  `
+                                <li class="list-group-item d-flex justify-content-between align-items-center" style="border: none;">
+                                    <strong>${menu.label}</strong>
+                                    <a href="#" class="btn btn-rounded btn-sm btn-danger" data-attribute_label="${ attribute.label }" data-delete_factor="delete-site-attribute-link" data-target_id="${ menuLinks[i].id }">
+                                        Delete &nbsp; <i class="far fa-times-circle"></i>
+                                    </a>
+                                </li>
+                                `;
+                        }
+                    }
+                    $('#' + targetedULID).html(linkLI);
+                }
+            }
+        }
+    }
+}
+
+function deleteSitePageAttributeLink(events) {
+    var itemID = null;
+    var deleteFactor = null;
+    var deleteLinkGroupLabel = null;
+    var deteleURL = null;
+
+    if (!(events.target.tagName === "svg" || events.target.tagName === "path")) {
+        itemID = events.target.getAttribute('data-target_id');
+        deleteFactor = events.target.getAttribute('data-delete_factor');
+        deleteLinkGroupLabel = events.target.getAttribute('data-attribute_label');
+        deteleURL = '/manager/site-attributes';
+    }
+
+    if (events.target.tagName === "svg" || events.target.tagName === "path") {
+        itemID = getSVGClickTarget(events).parentNode.getAttribute('data-target_id');
+        deleteFactor = getSVGClickTarget(events).parentNode.getAttribute('data-delete_factor');
+        deleteLinkGroupLabel = getSVGClickTarget(events).parentNode.getAttribute('data-attribute_label');
+        deteleURL = '/manager/site-attributes';
+    }
+
+    $.confirm({
+        title: "DELETE " + deleteLinkGroupLabel.toUpperCase(),
+        content: `Do you want to delete link?`,
+        buttons: {
+            Yes: function () {
+                makeAJAXDeleteRequest(deteleURL, itemID, deleteFactor, 'errorMsg');  
+            },
+            No: function () {
+            }
+        }
+    });
+}
+
+function getCompenentName(elementID) {
+    
+    if (!elementID) {
+        return null;
+    } else {
+        var nameSplitArray = elementID.split('_');
+        var returnName = "";
+        if(nameSplitArray.length == 1) {
+            return nameSplitArray;
+        }
+        for (i=0; i<(nameSplitArray.length-1); i++) {
+            returnName += nameSplitArray[i];
+            if (i < (nameSplitArray.length-2)) {
+                returnName += '_';
+            }
+        }
+        return returnName;
+    }
+}
+
+function isDynamicSelect(targetID) {
+    var splitID = targetID.split('_');
+
+    if (splitID.length <= 1) {
+        return false;
+    } else {
+        if (splitID[splitID.length - 1] == 'select') {
+            return true;
+        }
+    }
+    return false;
+}
+
+function isDynamicButton(targetID) {
+    var splitID = targetID.split('_');
+
+    if (splitID.length <= 1) {
+        return false;
+    } else {
+        if (splitID[splitID.length - 1] == 'btn') {
+            return true;
+        }
+    }
+    return false;
 }
 
 function handleDocumentKeyUpEvents(e) {
@@ -331,8 +477,17 @@ function generateSelectOptions(id, key, defaultText='<option value="" selected h
         }
         return null;
     }
-    
-    
+}
+
+function generateSelectOptionsWithValueLabel(id, key, label, defaultText='<option value="" selected hidden>--- Select ---</option>', selectOptionObject=[], filterParams=[]) {
+    var selectOptions = defaultText;
+    if (selectOptionObject) {
+        selectOptionObject.map(option => {
+            selectOptions += `<option value="${option[id]}">${option[label]}  &nbsp;&nbsp;&lt;${option[key]}&gt;</option>`;
+        });
+        return selectOptions;
+    }
+    return null;
 }
 
 function selectAnItemFromACollectionByID(searchParams, collection) {
@@ -341,6 +496,30 @@ function selectAnItemFromACollectionByID(searchParams, collection) {
         collection.map(item => {
             if (item.id == searchParams) {
                 selectedItem = item;
+            }
+        });
+    }
+    return selectedItem;
+}
+
+function selectItemsFromACollection(searchParams, collection) {
+    var selectedItem = [];
+    if (collection) {
+        collection.map(item => {
+            if (item.id == searchParams) {
+                selectedItem.push(item);
+            }
+        });
+    }
+    return selectedItem;
+}
+
+function selectItemsFromACollectionByProperty(searchParams, property, collection) {
+    var selectedItem = [];
+    if (collection) {
+        collection.map(item => {
+            if (item[property] == searchParams) {
+                selectedItem.push(item);
             }
         });
     }
@@ -399,7 +578,7 @@ function updateSiteAttributeFormData(e) {
 }
 
 function updateSiteAttributeFormDataImageRefValue(e) {
-    getByID('attr_value').value = getTextFromSelectObject(e.target);
+    getByID('attr_value').value = getTextFromSelectObject(e.target, '<', '>');
 }
 
 function processSaveSiteAttribute(e) {
@@ -876,7 +1055,7 @@ function handleSendComposedEmail(e) {
                             formData.emailParameters = emailParamsObject;
                             stopSetInterval(getEPInterval);
                             // perform the rest email sending process
-                            makeAJAXRequest('/manager/email-compose', formData, 'errorMsg')
+                            makeAJAXRequest('/manager/email-compose', formData, 'errorMsg');
                         }
                     }, 1000);
                 }, 3000);
@@ -894,7 +1073,7 @@ function handleSendComposedEmail(e) {
                                     formData.emailParameters = emailParamsObject;
                                     stopSetInterval(getEPInterval);
                                     // perform the rest email sending process
-                                    makeAJAXRequest('/manager/email-compose', formData, 'errorMsg')
+                                    makeAJAXRequest('/manager/email-compose', formData, 'errorMsg');
                                 }
                             }, 1000);
                         }, 3000);
@@ -916,7 +1095,7 @@ function handleSendComposedEmail(e) {
                                     formData.emailParameters = emailParamsObject;
                                     stopSetInterval(getEPInterval);
                                     // perform the rest email sending process
-                                    makeAJAXRequest('/manager/email-compose', formData, 'errorMsg')
+                                    makeAJAXRequest('/manager/email-compose', formData, 'errorMsg');
                                 }
                             }, 1000);
                         }, 3000);
@@ -924,6 +1103,326 @@ function handleSendComposedEmail(e) {
                 }
             }
         }
+    }
+}
+
+function handleAddSiteMenuButtonClick(e) {
+    e.preventDefault();
+
+    getByID('add_site_menu').innerHTML = `<strong>Add Site Menu</strong>`;
+}
+
+function handleCreateSitePageButtonClick(e) {
+    e.preventDefault();
+
+    getByID('create_site_page_header').innerHTML = `<strong>Create Site Page</strong>`;
+}
+
+function handlePageTitleTextChange(e) {
+    getByID('create_page_slug').value = generateSlug(e.target.value)
+    $('#create_page_slug').css('border', '1px solid #eee');
+    $('#create_page_slug').siblings().css('color', '#666');
+    $('#create_page_slug').siblings().remove('small');
+}
+
+function handleCreateSitePageRequest(e) {
+    e.preventDefault();
+
+    var isFormValidated = validateFormData('create_site_page_form');
+
+    if(isFormValidated) {
+        makeAJAXRequest('/manager/site-pages', getFormData('create_site_page_form'), 'errorMsg')
+    }
+}
+
+function updateSiteMenuPageSlugFormData(e) {
+    var pageID = e.target.value;
+    var pages = getAnItemFromAkrosoftCMSLocalStorage('pages');
+    var selectedPage = selectAnItemFromACollectionByID(pageID, pages);
+
+    getByID('page_slug').value = selectedPage.slug;
+    $('#page_slug').css('border', '1px solid #eee');
+    $('#page_slug').siblings().css('color', '#666');
+    $('#page_slug').siblings().remove('small');
+}
+
+function toggleSiteMenuParentMenuFormData(e) {
+    var selectedMenuType = e.target.value;
+
+    if (selectedMenuType == 1) {
+        getByID('display_parent_menu').style.display = 'none';
+        $('#menu_id').css('border', '1px solid #eee');
+        $('#menu_id').siblings().css('color', '#666');
+        $('#menu_id').siblings().remove('small');
+    } else if (selectedMenuType == 2) {
+        getByID('display_parent_menu').style.display = 'block';
+        $('#menu_id').css('border', '1px solid #eee');
+        $('#menu_id').siblings().css('color', '#666');
+        $('#menu_id').siblings().remove('small');
+
+        if (getByID('menu_id')) {
+            var defaultText = '<option value="" hidden selected> -- Select Parent Menu --</option>';
+            var menus = getAnItemFromAkrosoftCMSLocalStorage('menus');
+            getByID('menu_id').innerHTML = generateSelectOptions('id', 'label', defaultText, menus);
+        }
+    }
+}
+
+function handleUpdateSiteMenuRequest(e) {
+    e.preventDefault();
+
+    var isFormValidated = validateFormData('add_site_menu_form');
+
+    if(isFormValidated) {
+        makeAJAXRequest('/manager/site-menu', getFormData('add_site_menu_form'), 'errorMsg')
+    }
+}
+
+function handleUpdateSelectedTemplateDependencies(e) {
+    var menuDefaultText = '<option value="" hidden selected>-- Select Site Menu Style --</option>';
+    var footerDefaultText = '<option value="" hidden selected>-- Select Site Footer Style --</option>';
+    var menuThemeStyles = getThemeTemplateElements(e.target.value, 'menu');
+    var FooterThemeStyles = getThemeTemplateElements(e.target.value, 'footer');
+    $('#menu').html(generateSelectOptions('id', 'label', menuDefaultText, menuThemeStyles));
+    $('#footer').html(generateSelectOptions('id', 'label', footerDefaultText, FooterThemeStyles));
+    $('#menu_manual_attributes').html("");
+    $('#menu_auto_attributes').html("");
+    $('#footer_manual_attributes').html("");
+    $('#footer_auto_attributes').html("");
+    if (getByID('save_template_setting_btn_container')) {
+        getByID('save_template_setting_btn_container').style.display = 'block';
+    }
+}
+
+function getThemeTemplateElements(template_id, element_cat_name) {
+    var element_categories = getAnItemFromAkrosoftCMSLocalStorage('element_categories');
+    var template_elements = getAnItemFromAkrosoftCMSLocalStorage('template_elements');
+    var foundItems = [];
+
+    var catID = null;
+
+    element_categories.map(item => {
+        if (item.name == element_cat_name) {
+            catID = item.id;
+        }
+    });
+
+    if (catID) {
+        template_elements.map(item => {
+            if (item.template_id == template_id && item.category_id == catID) {
+                foundItems.push(item);
+            }
+        });
+    }
+
+    return foundItems;
+}
+
+function handleUpdateSelectedMenuDependencies(e) {
+    var elementID = e.target.value;
+    var element_attributes = getAnItemFromAkrosoftCMSLocalStorage('element_attributes');
+    var elementAttributes = selectItemsFromACollectionByProperty(elementID, "element_id", element_attributes);
+    var elemAttrConfig = getElementAttributeConfiguration(elementAttributes);
+    var labelAuto = 'Generic Site Attributes';
+    var labelManual = 'Custom Menu Attribute';
+    $('#' + e.target.id + '_manual_attributes').html(manualElementAttributesUI(elemAttrConfig[1], labelManual));
+    $('#' + e.target.id + '_auto_attributes').html(autoElementAttributesUI(elemAttrConfig[0], labelAuto));
+    var menus = getAnItemFromAkrosoftCMSLocalStorage('menus');
+    if (menus) {
+        if (elemAttrConfig[1]) {
+            elemAttrConfig[1].forEach(item => {
+                if (item.target == 'menu') {
+                    $('#' + item.name + '_select').html(generateSelectOptions('id', 'label', '<option value="" selected hidden>-- Select Menu to Link --</option>', menus));
+                }
+            });
+        }
+    }
+
+    if (getByID('save_template_setting_btn_container')) {
+        getByID('save_template_setting_btn_container').style.display = 'block';
+    }
+}
+
+function handleUpdateSelectedFooterDependencies(e) {
+    var elementID = e.target.value;
+    var element_attributes = getAnItemFromAkrosoftCMSLocalStorage('element_attributes');
+    var elementAttributes = selectItemsFromACollectionByProperty(elementID, "element_id", element_attributes);
+    var elemAttrConfig = getElementAttributeConfiguration(elementAttributes);
+    var labelAuto = 'Generic Site Attributes';
+    var labelManual = 'Custom Footer Attributes';
+    $('#' + e.target.id + '_manual_attributes').html(manualElementAttributesUI(elemAttrConfig[1], labelManual));
+    $('#' + e.target.id + '_auto_attributes').html(autoElementAttributesUI(elemAttrConfig[0], labelAuto));
+    var menus = getAnItemFromAkrosoftCMSLocalStorage('menus');
+    if (menus) {
+        if (elemAttrConfig[1]) {
+            elemAttrConfig[1].forEach(item => {
+                if (item.target == 'menu') {
+                    $('#' + item.name + '_select').html(generateSelectOptions('id', 'label', '<option value="" selected hidden>-- Select Menu to Link --</option>', menus));
+                }
+            });
+        }
+    }
+
+    if (getByID('save_template_setting_btn_container')) {
+        getByID('save_template_setting_btn_container').style.display = 'block';
+    }
+}
+
+function autoElementAttributesUI(collection, label) {
+    var auto_attributes = getAnItemFromAkrosoftCMSLocalStorage('auto_attributes');
+    var autoUIBody = "";
+    if (collection.length <= 0) {
+        return "";
+    }
+    collection.map(item => {
+        autoUIBody += `
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <strong>${item.label}</strong>
+                <span class="${ auto_attributes[item.target] ? 'text-success' : 'text-danger' }">${ auto_attributes[item.target] ? '<i class="far fa-check-circle"></i>' : '<i class="far fa-times-circle"></i>' }</span>
+            </li>
+        `;
+    });
+        
+    var autoUI = `<div class="panel-content" style="border: none;"> 
+                        <div class="panel-subtitle"> 
+                            <h5 class="h5 text-uppercase">${label}</h5> 
+                        </div>
+                        <ul class="list-group">
+                            ${autoUIBody}
+                        </ul>
+                    </div>`;
+
+    return autoUI;
+}
+
+function manualElementAttributesUI(collection, label) {
+    var MaualUIBody = "";
+    if (collection.length <= 0) {
+        return "";
+    }
+    collection.map(item => {
+        MaualUIBody +=  `<ul class="nav nav-tabs"> 
+                        <li class="nav-item"> 
+                            <a href="#tab01" data-toggle="tab" class="nav-link active bg-success text-white"><strong>${item.label}</strong></a> 
+                        </li>
+                    </ul> 
+                    <div class="tab-content"> 
+                        <div class="tab-pane fade show active" id="tab01">
+                            ${ setManualInputType(item) }
+
+                            <h5 class="h5 text-uppercase text-success"><strong style="text-decoration: underline;">Links</strong></h5> 
+
+                            <ul class="list-group" id="${item.name + '_links'}" name="${item.name + '_links'}" style="border: none;">
+                                ${ getItemAttributes(item) }
+                            </ul> 
+                        </div>
+                    </div><br />`;
+    });
+
+    var manualUI = `<div class="panel-content" style="border: none;"> 
+                        <div class="panel-subtitle"> 
+                            <h5 class="h5 text-uppercase">${label}</h5> 
+                        </div>
+                        ${MaualUIBody}
+                    </div>`;
+
+    return manualUI;
+
+}
+
+function getItemAttributes(item, id="") {
+    var menus = getAnItemFromAkrosoftCMSLocalStorage('menus');
+    var manual_attribute_links = getAnItemFromAkrosoftCMSLocalStorage('manual_attribute_links');
+    var linkLI = "";
+
+    if (manual_attribute_links <= 0) {
+        return "";
+    }
+    for (i=0; i < manual_attribute_links.length; i++) {
+        if (manual_attribute_links[i].attribute_id == item.id) {
+            menu = selectAnItemFromACollectionByID(parseInt(manual_attribute_links[i].target_id, 10), menus);
+            if (menu) {
+                linkLI +=  `
+                    <li class="list-group-item d-flex justify-content-between align-items-center" style="border: none;">
+                        <strong>${menu.label}</strong>
+                        <a href="#" class="btn btn-rounded btn-sm btn-danger" data-attribute_label="${ item.label }" data-delete_factor="delete-site-attribute-link" data-target_id="${ manual_attribute_links[i].id }">
+                            Delete &nbsp; <i class="far fa-times-circle"></i>
+                        </a>
+                    </li>
+                    `;
+            }
+        }
+    }
+    
+    return linkLI;
+}
+
+function setManualInputType(item) {
+
+    var inputElement = "";
+
+    if (item.target == 'menu') {
+        inputElement = `
+        <div class="col-md-10 offset-md-1">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="form-group">
+                        <select  class="form-control" id="${item.name + '_select'}" name="${item.name + '_select'}">
+                            <option selected hidden value="">-- Select Menu to Link --</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <button id="${item.name + '_btn'}" name="${item.name + '_btn'}" class="btn btn-rounded btn-success btn-block" data-action="update links" data-attribute_id="${ item.id }">Add Link</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        `;
+    }
+    return inputElement;
+}
+
+function getElementAttributeConfiguration(collections) {
+    var auto = [];
+    var manual = [];
+
+    if (!collections) {
+        return [auto, manual];
+    }
+
+    collections.map(item => {
+        if (item.configuration == 'auto') {
+            auto.push(item);
+        }
+
+        if (item.configuration == 'manual') {
+            manual.push(item);
+        }
+    });
+
+    return [auto, manual];
+}
+
+function handleUpdateTemplateSettingRequest(e) {
+    e.preventDefault();
+
+    var isValid = true;
+
+    isValid = validateSingleElement('template');
+    isValid = validateSingleElement('menu');
+    isValid = validateSingleElement('footer');
+
+    if (isValid) {
+        var formData = {
+            action: 'update template settings',
+            template: getByID('template').value,
+            menu: getByID('menu').value,
+            footer: getByID('footer').value
+        };
+
+        makeAJAXRequest('/manager/site-pages-setup', formData, 'errorMsg');
     }
 }
 

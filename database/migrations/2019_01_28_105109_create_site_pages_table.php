@@ -17,7 +17,10 @@ class CreateSitePagesTable extends Migration
             $table->increments('id');
             $table->string('title');
             $table->string('slug');
-            $table->text('description');
+            $table->boolean('published')->default(false);
+            $table->string('header_title')->nullable();
+            $table->text('meta_tag')->nullable();
+            $table->text('meta_description')->nullable();
             $table->timestamps();
         });
     }

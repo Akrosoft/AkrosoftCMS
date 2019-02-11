@@ -89,4 +89,18 @@ class AttributeCollection extends Model
         }
         return null;
     }
+
+    public static function getClientAttributeCollectionID($collection_name) {
+        $collecttion = static::where('name', $collection_name)->get();
+        if($collecttion->isNotEmpty()) {
+            return $collecttion[0]->id;
+        }
+        return null;
+    }
+
+
+
+    public static function getCollectionsByCategoryID() {
+        return static::where('category_id', '2')->get(); 
+    }
 }

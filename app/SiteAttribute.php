@@ -95,6 +95,69 @@ class SiteAttribute extends Model
         return $default_value;
     }
 
+    public static function getClientSocialMediaAccounts() {
+        $social_media = [];
+        $social_media_attributes = AttributeCollection::getCollectionsByCategoryID();
+        if ($social_media_attributes->isNotEmpty()) {
+            foreach ($social_media_attributes as $attribute_collection) {
+                $attribute = static::where('collection_id', $attribute_collection->id )->get();
+                if($attribute->isNotEmpty()) {
+                    $attribute = $attribute[0];
+                    $social_media[] = $attribute;
+                }
+            }
+        }
+        return collect($social_media); 
+    }
+
+    public static function getClientAddress() {
+        $default_address = 'Client address has not been set.';
+        $attribute_id = AttributeCollection::getClientAttributeCollectionID('address');
+        if($attribute_id) {
+            $attribute = static::where('collection_id', $attribute_id )->get();
+            if($attribute->isNotEmpty()) {
+                return $attribute[0]->value;
+            }
+            return $default_address;
+        }
+        return $default_address;   
+    }
+
+    public static function getClientEmail() {
+        $default_email = 'Client email has not been set.';
+        $attribute_id = AttributeCollection::getClientAttributeCollectionID('email');
+        if($attribute_id) {
+            $attribute = static::where('collection_id', $attribute_id )->get();
+            if($attribute->isNotEmpty()) {
+                return $attribute[0]->value;
+            }
+            return $default_email;
+        }
+        return $default_email;   
+    }
+
+    public static function getClientTelephone() {
+        $default_phone = 'Client phone has not been set.';
+        $attribute_id = AttributeCollection::getClientAttributeCollectionID('phone');
+        if($attribute_id) {
+            $attribute = static::where('collection_id', $attribute_id )->get();
+            if($attribute->isNotEmpty()) {
+                return $attribute[0]->value;
+            }
+            return $default_phone;
+        }
+        return $default_phone;   
+    }
+
+    public static function getContactInfo() {
+        $data = [
+            'address' => static::getClientAddress(),
+            'email' => static::getClientEmail(),
+            'phone' => static::getClientTelephone()
+        ];
+        return (object)$data;
+    }
+
     public static function getClientEmailSendDetails() {
         $isValidEmail = false;
         $default_value = (object)['name'=>'Akrosoft CMS', 'domain' => 'akrosoft-cms.net'];
@@ -122,5 +185,90 @@ class SiteAttribute extends Model
             ];
         }
         return $default_value;
+    }
+
+    public static function isClientLogoSet() {
+        $attribute_id = AttributeCollection::getClientLogoID();
+        if($attribute_id) {
+            $attribute = static::where('collection_id', $attribute_id )->get();
+            if($attribute->isNotEmpty()) {
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
+
+    public static function isClientSocialMediaConfigured() {
+        $configured = false;
+        $social_media_attributes = AttributeCollection::getCollectionsByCategoryID();
+        if ($social_media_attributes->isNotEmpty()) {
+            foreach ($social_media_attributes as $attribute_collection) {
+                $attribute = static::where('collection_id', $attribute_collection->id )->get();
+                if($attribute->isNotEmpty()) {
+                    $configured = true;
+                }
+            }
+        }
+        return $configured; 
+    }
+
+    public static function isCopyRightInfoSet() {
+        $attribute_id = AttributeCollection::getClientCopyRightID();
+        if($attribute_id) {
+            $attribute = static::where('collection_id', $attribute_id )->get();
+            if($attribute->isNotEmpty()) {
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
+
+    public static function isContactInfoSet() {
+        $clientAddress = static::isClientAddressInfoSet();
+        $clientEmail = static::isClientEmailInfoSet();
+        $clientTelephone = static::isClientTelephoneInfoSet();
+
+        if ( $clientAddress && $clientEmail && $clientTelephone ) {
+            return true;
+        }
+        return false;
+    }
+
+    public static function isClientAddressInfoSet() {
+        $attribute_id = AttributeCollection::getClientAttributeCollectionID('address');
+        if($attribute_id) {
+            $attribute = static::where('collection_id', $attribute_id )->get();
+            if($attribute->isNotEmpty()) {
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
+
+    public static function isClientEmailInfoSet() {
+        $attribute_id = AttributeCollection::getClientAttributeCollectionID('email');
+        if($attribute_id) {
+            $attribute = static::where('collection_id', $attribute_id )->get();
+            if($attribute->isNotEmpty()) {
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
+
+    public static function isClientTelephoneInfoSet() {
+        $attribute_id = AttributeCollection::getClientAttributeCollectionID('phone');
+        if($attribute_id) {
+            $attribute = static::where('collection_id', $attribute_id )->get();
+            if($attribute->isNotEmpty()) {
+                return true;
+            }
+            return false;
+        }
+        return false;
     }
 }

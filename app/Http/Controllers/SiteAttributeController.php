@@ -10,6 +10,7 @@ use App\AttributeImages;
 use App\Contact;
 use App\UserSocialMediaAccount;
 use App\ConfigureEmail;
+use App\SitePage;
 
 class SiteAttributeController extends Controller
 {
@@ -51,7 +52,8 @@ class SiteAttributeController extends Controller
             'attributeImages' => AttributeImages::getAllImages(),
             'contacts' => Contact::all(),
             'social_media_accounts' => $user_social,
-            'emailTemplate' => ConfigureEmail::all()
+            'emailTemplate' => ConfigureEmail::all(),
+            'pages' => SitePage::getAllSitePages()
         ];
 
         return $data;

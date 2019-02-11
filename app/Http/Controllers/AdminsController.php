@@ -17,6 +17,8 @@ use App\Contact;
 use App\ConfigureEmail;
 use App\Email;
 use App\SitePage;
+use App\SiteMenu;
+use App\SelectedElementAttributes;
 use Auth;
 
 class AdminsController extends Controller
@@ -47,29 +49,183 @@ class AdminsController extends Controller
         return view('admin.site-pages')->with($data);
     }
 
+    public function handleCreateSitePageRequest(Request $request) {
+        if($request->ajax()) {
+            $this->validate($request, [
+                'formData' => 'required'
+            ]);
+
+            $page = SitePagesController::getSitePageBySlug($request->formData['create_page_slug']);
+
+            if ($page->isNotEmpty()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Site Page was NOT created, page already exist.',
+                    'url' => ''
+                ]);
+            }
+
+            $result = SitePagesController::createSitePage($request->formData);
+            if ($result) {
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Site Page was created successfully',
+                    'url' => '/manager/site-pages'
+                ]);
+            }
+            return response()->json([
+                'status' => false,
+                'message' => 'Site Page create attempt failed.',
+                'url' => ''
+            ]);
+        }
+    }
+
     public function sitePagePreview($page_slug) {
-        $page = SitePage::getSitePageBySlug($page_slug);
-        $data = [
-            'page' => $page[0]
-        ];
+        $data = SiteAttributeController::getAllSiteAttributeParameter();
+        $page = SitePagesController::getSitePageBySlug($page_slug);
+        $data['page'] = $page[0];
+        $data['template_setting'] = SitePagesController::getSiteTemplateSetting();
+        $data['footer'] = SitePagesController::getPageFooter();
+        $data['menu'] = SitePagesController::getPageMenu();
+        $data['admin_preview'] = true;
+
+        // dd($data); 
 
         return view('admin.preview')->with($data);
     }
 
-    public function sitePageSetting($page_slug) {
+    public function sitePageContentManager($page_slug) {
         $data = SiteAttributeController::getAllSiteAttributeParameter();
-        return view('admin.page-settings')->with($data);
+        return view('admin.page-content-manager')->with($data);
     }
 
 
-    public function pageSections() {
+    public function siteMenu() {
         $data = SiteAttributeController::getAllSiteAttributeParameter();
-        return view('admin.page-sections')->with($data);
+        $data['menus'] = SiteMenu::getAllMenus();
+        return view('admin.site-menu')->with($data);
     }
 
-    public function pageContents() {
+    public function handleUpdateSiteMenuRequest(Request $request) {
+        if ($request->ajax()) {
+            $this->validate($request, [
+                'formData' => 'required'
+            ]);
+
+            $menu = SiteMenu::where('page_id', $request->formData['menu_page'])->get();
+
+            if($menu->isNotEmpty()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Menu NOT created, page has already been linked.',
+                    'url' => ''
+                ]);
+            }
+
+            $menu = SiteMenu::where('order', $request->formData['menu_order'])->get();
+
+            if($menu->isNotEmpty()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Menu NOT created, menu order number has already been used.',
+                    'url' => ''
+                ]);
+            }
+
+            $result = SitePagesController::createSiteMenu($request->formData);
+
+            if ($result) {
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Site menu was updated successfully',
+                    'url' => '/manager/site-menu'
+                ]);
+            }
+            return response()->json([
+                'status' => false,
+                'message' => 'Site menu update attempt failed.',
+                'url' => ''
+            ]);
+        }
+    }
+
+    public function siteFooter() {
         $data = SiteAttributeController::getAllSiteAttributeParameter();
-        return view('admin.page-contents')->with($data);
+        return view('admin.site-footer')->with($data);
+    }
+
+    public function sitePagesSetup() {
+        $data = SiteAttributeController::getAllSiteAttributeParameter();
+        $data['setting_categories'] = SitePagesController::getSitePageSetupCategoy();
+        $data['setting_collections'] = SitePagesController::getSitePageSetupCollections();
+        $data['templates'] = SitePagesController::getAllSiteTemplates();
+        $data['template_setting'] = SitePagesController::getSiteTemplateSetting();
+        $data['template_menu_setting'] = SitePagesController::getSiteTemplateMenuSetting();
+        $data['template_footer_setting'] = SitePagesController::getSiteTemplateFooterSetting();
+        $data['template_elements'] = SitePagesController::getAllSiteTemplateElements();
+        $data['element_attributes'] = SitePagesController::getAllSiteTemplateElementAttributes();
+        $data['element_categories'] = SitePagesController::getAllSiteTemplateElementCategories();
+        $data['manual_attribute_links'] = SitePagesController::getAllSiteTemplateElementAttributesManualLinks();
+        $data['auto_attributes'] = SitePagesController::getAutoConfigureTemplateAttributes();
+        $data['menus'] = SitePagesController::getAllSiteMenus();
+
+        // dd($data);
+
+        return view('admin.site-pages-setup')->with($data);
+    }
+
+    public function handleUpdateSitePagesSetupRequest(Request $request) {
+        if ($request->ajax()) {
+            $this->validate($request, [
+                'formData' => 'required'
+            ]);
+
+            $result = null;
+
+            switch ($request->formData['action']) {
+                case 'update links':
+                    $result = SitePagesController::updatePagesSettingsLinks($request->formData);
+                    if ($result) {
+                        return response()->json([
+                            'status' => true,
+                            'message' => '',
+                            'links' => SitePagesController::getSelectedAttributeLinks($request->formData['attribute_id'])
+                        ]);
+                        break;
+                    } else {
+                        return response()->json([
+                            'status' => false,
+                            'message' => '',
+                        ]);
+                        break;
+                    }
+                    break;
+
+                case 'update template settings':
+                    $result = SitePagesController::updateSiteThemeSettings($request->formData);
+                    if ($result) {
+                        return response()->json([
+                            'status' => true,
+                            'message' => 'Site Theme was updated successfully',
+                            'url' => '/manager/site-pages-setup'
+                        ]);
+                        break;
+                    } else {
+                        return response()->json([
+                            'status' => false,
+                            'message' => 'Site Theme update attempt failed.',
+                            'url' => ''
+                        ]);
+                        break;
+                    }
+                    break;
+                
+                default:
+                    dd('action has not been configured!!!');
+                    break;
+            }
+        }
     }
 
     public function attributes() {
@@ -145,6 +301,16 @@ class AdminsController extends Controller
                     $message = 'Message was deleted successfully';
                     $url = "/manager/contact-list";
                     break;
+                
+                case 'delete-site-attribute-link':
+                    $attribute = SelectedElementAttributes::findOrFail($request->id)->attribute;
+                    $wasDeleted = SelectedElementAttributes::findOrFail($request->id)->delete();
+                    $message = 'Link was deleted successfully';
+                    $url = "/manager/site-pages-setup";
+                    $data = [
+                        'item' => $attribute
+                    ];
+                    break;
 
                 default:
                     $wasDeleted = SiteAttributeController::destroy($request->id);
@@ -157,13 +323,14 @@ class AdminsController extends Controller
                 return response()->json([
                     'status' => true,
                     'message' => $message,
+                    'data' => isset($data) ? $data : null,
                     'url' => $url
                 ]);
             }
             return response()->json([
                 'status' => false,
                 'message' => 'Site attribute delete attempt was NOT successful.',
-                'url' => '/manager/site-attributes'
+                'url' => ''
             ]);
         }
     }

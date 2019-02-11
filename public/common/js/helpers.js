@@ -69,15 +69,43 @@ function formatDate(input, stringMonth="") {
 }
 
 
-function getTextFromSelectObject(selectObject) {
-    return selectObject.options[selectObject.selectedIndex].text;
+function getTextFromSelectObject(selectObject, startChar="", endChar="") {
+    if (!startChar && !endChar) {
+        return selectObject.options[selectObject.selectedIndex].text;
+    }
+    
+    var startIndex = selectObject.options[selectObject.selectedIndex].text.indexOf(startChar);
+    var endIndex = selectObject.options[selectObject.selectedIndex].text.indexOf(endChar);
+    var newText = "";
+
+    for (let i=(startIndex+1); i<endIndex; i++) {
+        newText += selectObject.options[selectObject.selectedIndex].text[i];
+    }
+
+    return newText;
+}
+
+function validateSingleElement(elementID) {
+    var isValid = true;
+    
+    if( $('#' + elementID).val() == "" || $('#' + elementID).val() == 0 ) {
+        $('#' + elementID).css('border', '1px solid #aa0000');
+        $('#' + elementID).siblings().css('color', '#ff0000');
+        $('#' + elementID).siblings().remove('small');
+        $('#' + elementID).after('<small style="color: #ff0000;"><i class="fas fa-exclamation-circle" style="font-size: 130%;"></i> &nbsp;This field is required</small>');
+        isValid = false;
+    }
+
+    return isValid;
 }
 
 function validateFormData(formToBeValidated) {
     var parent_section = $(document).find(formToBeValidated);
+    if (!parent_section.length) {
+        parent_section = $("#" + formToBeValidated);
+    }
     var next_step = true;
 
-    
     // fields validation
     parent_section.find('input[type="text"], input[type="password"], input[type="email"], input[type="number"], input[type="date"], textarea, select').each(function() {
         if( $(this).val() == "" || $(this).val() == 0 ) {
@@ -132,7 +160,10 @@ function validateFormData(formToBeValidated) {
 
 function getFormData(formWhoseDataIsToBeExtracted) {
     var parent_section = $(document).find(formWhoseDataIsToBeExtracted);
-    var formData = {};  
+    if (!parent_section.length) {
+        parent_section = $("#" + formWhoseDataIsToBeExtracted);
+    }
+    var formData = {}; 
     parent_section.find('input[type="text"], input[type="hidden"], input[type="password"], input[type="email"], input[type="file"], input[type="number"], input[type="date"], textarea, select').each(function() { 
         if( $(this).val() == "" || $(this).val() == 0 ) {
         } else {
@@ -239,6 +270,9 @@ function makeSyncAJAXRequest(Url, formData={}, method="POST"){
     jQuery.ajax({
       type: method,
       url: Url,
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
       data: { formData: formData },
       success: function(html) {
         strReturn = html;
@@ -297,6 +331,25 @@ function makeAJAXDeleteRequest(requestURL, id="", delete_factor="", targetElemen
             console.log("error");
         }  
     });
+}
+
+function makeSyncAJAXDeleteRequest(requestURL, id="", delete_factor="") {
+    var data = null;
+    jQuery.ajax({
+        type: 'POST',
+        url: requestURL,
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        data: { _method: "DELETE", id , delete_factor },
+        dataType: 'json',
+        success: function(response) {
+            data = response
+        },
+        async:false
+      });
+    
+      return data;
 }
 
 function makeAJAXUploadImageRequest(formID, targetElement="") {
@@ -368,7 +421,7 @@ function updateErrorColors(id) {
 */
 var keys = keys || function (o) { var a = []; for (var k in o) a.push(k); return a; };
 
-function generateSlug(string) {
+function generateNameID(string) {
 //  var accents = "àáäâèéëêìíïîòóöôùúüûñç";
     var accents = "\u00e0\u00e1\u00e4\u00e2\u00e8"
     + "\u00e9\u00eb\u00ea\u00ec\u00ed\u00ef"
@@ -405,7 +458,7 @@ function generateSlug(string) {
     .replace(/^-|-$/g, '');
 }
 
-function generateNameID(string) {
+function generateSlug(string) {
     //  var accents = "àáäâèéëêìíïîòóöôùúüûñç";
         var accents = "\u00e0\u00e1\u00e4\u00e2\u00e8"
         + "\u00e9\u00eb\u00ea\u00ec\u00ed\u00ef"

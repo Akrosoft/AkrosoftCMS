@@ -10,6 +10,10 @@ class SitePage extends Model
     protected $primaryKey = 'id';
     public $timestamp = true;
 
+    public function menu() {
+        return $this->hasMany('App\SiteMenu', 'page_id', 'id');
+    }
+
     public static function getAllSitePages() {
         return static::all();
     }

@@ -15,6 +15,10 @@ class CreateSitePageSettingsTable extends Migration
     {
         Schema::create('site_page_settings', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('collection_id');
+            $table->boolean('value');
+            $table->integer('previous')->nullable();
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }
